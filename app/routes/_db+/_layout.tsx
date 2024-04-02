@@ -1,7 +1,7 @@
 import { Fragment, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import type { LoaderFunction } from "@remix-run/node";
-import { json } from "@remix-run/node"; // or cloudflare/deno
+import { json } from "@remix-run/cloudflare";
 import {
   NavLink,
   Outlet,
@@ -31,9 +31,10 @@ import {
   TooltipTrigger,
 } from "~/components/ui/tooltip";
 import { cn } from "~/utils";
+
 import { ExitButton } from "./components/ExitButton";
-import { getUserData } from "~/modules/auth/auth.server";
 import { authSessionStorage } from "~/modules/auth/session.server";
+import { getUserData } from "~/modules/auth/auth.server";
 
 const navigation = [
   { name: "Home", href: "/home", icon: HomeIcon },
@@ -54,11 +55,11 @@ export const loader: LoaderFunction = async ({ request }) => {
   await sleep(1000);
 
   if (!user?.userId) {
-    return redirect("/login");
+    throw redirect("/login");
   }
 
   if (!user?.storeId) {
-    return redirect("/onboarding?step=1");
+    throw redirect("/onboarding?step=1");
   }
 
   const authSession = await authSessionStorage.getSession(
@@ -67,21 +68,19 @@ export const loader: LoaderFunction = async ({ request }) => {
 
   authSession.set("storeId", user.storeId);
 
-  return user
-    ? json(
-        {
-          user: {
-            userId: user?.userId,
-            email: user?.email,
-          },
-        },
-        {
-          headers: {
-            "set-cookie": await authSessionStorage.commitSession(authSession),
-          },
-        }
-      )
-    : null;
+  return json(
+    {
+      user: {
+        userId: user?.userId,
+        email: user?.email,
+      },
+    },
+    {
+      headers: {
+        "set-cookie": await authSessionStorage.commitSession(authSession),
+      },
+    }
+  );
 };
 
 export default function Screen() {
@@ -288,7 +287,7 @@ export default function Screen() {
                 </li>
 
                 <div className="mt-auto flex items-center justify-between py-4">
-                  {user ? (
+                  {data?.user ? (
                     <ExitButton
                       isDialogOpen={isDialogOpen}
                       setIsDialogOpen={setIsDialogOpen}

@@ -1,6 +1,3 @@
-import { useEffect } from "react";
-import { useFetcher } from "@remix-run/react";
-import { LogOutIcon } from "lucide-react";
 import { Button } from "~/components/ui/button";
 import {
   Dialog,
@@ -10,6 +7,10 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "~/components/ui/dialog";
+
+import { useFetcher } from "@remix-run/react";
+import { useEffect } from "react";
+import { LogOutIcon } from "lucide-react";
 
 export function ExitButton({
   isDialogOpen,
@@ -24,7 +25,7 @@ export function ExitButton({
     if (fetcher.data) {
       setIsDialogOpen(false);
     }
-  }, [fetcher.data]);
+  }, [fetcher.data, setIsDialogOpen]);
 
   return (
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
@@ -34,16 +35,16 @@ export function ExitButton({
           className="flex w-full items-center gap-x-2 p-2 text-sm font-semibold text-gray-500 transition-all hover:bg-gray-100"
         >
           <LogOutIcon className="h-4 w-4" />
-          <p>Sair</p>
+          <p>Log out</p>
         </button>
       </DialogTrigger>
 
       <DialogContent className="sm:max-w-[350px]">
         <DialogHeader>
-          <DialogTitle>Ter certeza que deseja sair?</DialogTitle>
+          <DialogTitle>Are you sure you want to log out?</DialogTitle>
         </DialogHeader>
 
-        <fetcher.Form method="post" action="/api/signout?index">
+        <fetcher.Form method="post" action="/logout">
           <DialogFooter className="mt-8 flex lg:space-x-6">
             <button
               onClick={() => {
@@ -52,10 +53,10 @@ export function ExitButton({
               type="button"
               className="text-sm text-gray-500"
             >
-              Cancelar
+              Cancel
             </button>
             <Button type="submit" name="action" value="logout">
-              Sair
+              Log out
             </Button>
           </DialogFooter>
         </fetcher.Form>
