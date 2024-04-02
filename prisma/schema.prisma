@@ -1,0 +1,230 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["driverAdapters"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          String   @id @default(cuid())
+  email       String   @unique
+  password    String?
+  name        String?
+  orders      Order[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  ownedStores Store[]
+}
+
+model Session {
+  id             String    @id @default(cuid())
+  expirationDate DateTime? @db.Timestamp(0)
+  createdAt      DateTime  @default(now()) @db.Timestamp(0)
+  updatedAt      DateTime  @default(now()) @db.Timestamp(0)
+  userId         String?   @db.VarChar(256)
+
+  @@index([userId], map: "userId_idx")
+}
+
+model Verification {
+  id        String    @id @default(cuid())
+  createdAt DateTime  @default(now()) @db.Timestamp(0)
+  /// The type of verification, e.g. "email" or "phone"
+  type      String    @db.VarChar(40)
+  /// The thing we're trying to verify, e.g. a user's email or phone number
+  target    String    @db.VarChar(40)
+  /// The secret key used to generate the otp
+  secret    String    @db.VarChar(256)
+  /// The algorithm used to generate the otp
+  algorithm String    @db.VarChar(256)
+  /// The number of digits in the otp
+  digits    Int
+  /// The number of seconds the otp is valid for
+  period    Int
+  /// The valid characters for the otp
+  charSet   String    @db.VarChar(256)
+  expiresAt DateTime? @db.Timestamp(0)
+
+  @@unique([type, target], map: "type_target")
+}
+
+model Tag {
+  id         String     @id @db.VarChar(256)
+  name       String     @db.VarChar(256)
+  storeId    String
+  store      Store      @relation(fields: [storeId], references: [id])
+  createdAt  DateTime   @default(now()) @db.Timestamp(0)
+  items      Item[]
+  categories Category[]
+
+  @@unique([name, storeId], map: "name_storeId")
+}
+
+// Product and categories does not correlate directly
+// We correlate them through the tags
+model Category {
+  id          String  @id @db.VarChar(256)
+  name        String
+  description String?
+  store       Store   @relation(fields: [storeId], references: [id])
+  storeId     String
+  tags        Tag[]
+}
+
+model Store {
+  id                                String       @id @default(cuid())
+  name                              String?
+  category                          String?
+  slug                              String?      @unique
+  description                       String?
+  typeOfLayout                      TypeOfLayout
+  logoUrl                           String?
+  bannerUrl                         String?
+  overlayColor                      String?
+  items                             Item[]
+  createdAt                         DateTime     @default(now())
+  updatedAt                         DateTime     @updatedAt
+  owners                            User[]
+  tags                              Tag[]
+  units                             Unit[]
+  paymentMethods                    String[]
+  orders                            Order[]
+  categories                        Category[]
+  isVisible                         Boolean      @default(true)
+  acceptsOrdersOutsideBusinessHours Boolean      @default(true)
+  acceptsOrdersOnWhatsapp           Boolean      @default(true)
+}
+
+enum TypeOfLayout {
+  VERTICAL
+  HORIZONTAL
+}
+
+model Unit {
+  id             Int            @id @default(autoincrement())
+  name           String
+  address        String
+  cep            String
+  phone          String
+  email          String
+  typeOfDelivery String
+  businessHours  BusinessHour[]
+  storeId        String
+  store          Store          @relation(fields: [storeId], references: [id])
+}
+
+model BusinessHour {
+  id     Int    @id @default(autoincrement())
+  day    String
+  open   String
+  close  String
+  unitId Int
+  unit   Unit   @relation(fields: [unitId], references: [id])
+}
+
+// https://chat.openai.com/share/77c59fd9-fbf2-4d02-bc7c-a01f894905a8
+model Item {
+  id                      String                  @id
+  name                    String
+  description             String?
+  price                   Int
+  itemImages              String[]
+  priceType               PriceType
+  storeId                 String
+  store                   Store                   @relation(fields: [storeId], references: [id])
+  orderItems              OrderItem[]
+  createdAt               DateTime                @default(now())
+  updatedAt               DateTime                @updatedAt
+  tags                    Tag[]
+  isVisible               Boolean                 @default(true)
+  isAvailable             Boolean                 @default(true)
+  customizationCategories CustomizationCategory[]
+}
+
+enum PriceType {
+  is
+  startsAt
+}
+
+model Order {
+  id         Int          @id @default(autoincrement())
+  userId     String?
+  user       User?        @relation(fields: [userId], references: [id])
+  totalPrice Float
+  status     OrderStatus?
+  orderItems OrderItem[]
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+  storeId    String
+  store      Store        @relation(fields: [storeId], references: [id])
+}
+
+enum OrderStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+  DELIVERED
+}
+
+model OrderItem {
+  id             Int                 @id @default(autoincrement())
+  orderId        Int
+  order          Order               @relation(fields: [orderId], references: [id])
+  itemId         String
+  item           Item                @relation(fields: [itemId], references: [id])
+  quantity       Int
+  customizations ItemCustomization[]
+  observation    String?
+  createdAt      DateTime            @default(now())
+  updatedAt      DateTime            @updatedAt
+}
+
+// Examples:
+// CustomizationCategory: ItemCustomization
+// Size: Small, Medium, Large
+// Flavor: Chocolate, Vanilla, Strawberry
+model ItemCustomization {
+  id                      Int                   @id @default(autoincrement())
+  name                    String
+  price                   Int
+  createdAt               DateTime              @default(now())
+  updatedAt               DateTime              @default(now()) @updatedAt
+  orderItem               OrderItem?            @relation(fields: [orderItemId], references: [id])
+  orderItemId             Int?
+  customizationCategory   CustomizationCategory @relation(fields: [customizationCategoryId], references: [id], onDelete: Cascade)
+  customizationCategoryId Int
+}
+
+// Examples:
+// Size
+// Flavor
+// Color
+model CustomizationCategory {
+  id                 Int                 @id @default(autoincrement())
+  name               String
+  // With min and max we can control how many items the user can select and if it's required or not
+  min                Int
+  max                Int
+  itemCustomizations ItemCustomization[]
+  itemId             String
+  item               Item                @relation(fields: [itemId], references: [id], onDelete: Cascade)
+}
+
+model KiwifyEvents {
+  id          String   @id
+  name        String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  webhookData Json?
+}
+
+model Lead {
+  id        String   @id
+  email     String?
+  name      String?
+  phone     String?
+  createdAt DateTime @default(now())
+}
