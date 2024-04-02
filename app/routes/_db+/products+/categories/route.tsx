@@ -7,7 +7,6 @@ import type {
 } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
-import { clientDb } from "db";
 import { jsonWithSuccess } from "remix-toast";
 import { ClientOnly } from "remix-utils/client-only";
 import { namedAction } from "remix-utils/named-action";
@@ -192,11 +191,11 @@ export async function loader({ request }: LoaderFunctionArgs) {
     },
   });
 
-  const tags = await clientDb
-    .selectFrom("Tag")
-    .selectAll()
-    .where("Tag.storeId", "=", storeId)
-    .execute();
+  const tags = await prisma.tag.findMany({
+    where: {
+      storeId,
+    },
+  });
 
   return json({
     ok: true,

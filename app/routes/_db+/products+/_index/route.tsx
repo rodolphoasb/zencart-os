@@ -5,7 +5,6 @@ import type {
 } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { Link, useLoaderData } from "@remix-run/react";
-import { clientDb } from "db";
 import { jsonWithSuccess } from "remix-toast";
 import { namedAction } from "remix-utils/named-action";
 import { Button2 } from "~/components/ui/button2";
@@ -38,12 +37,20 @@ export async function action({ request }: ActionFunctionArgs) {
         return json({ ok: false, error: "Missing productId" }, { status: 400 });
       }
 
-      await clientDb.deleteFrom("Item").where("id", "=", productId).execute();
-
-      await clientDb
-        .deleteFrom("_ItemToTag")
-        .where("A", "=", productId)
-        .execute();
+      await prisma.item.delete({
+        where: {
+          id: productId,
+        },
+      });
+      await prisma.tag.deleteMany({
+        where: {
+          items: {
+            some: {
+              id: productId,
+            },
+          },
+        },
+      });
 
       return jsonWithSuccess({ ok: true }, "Produto excluído com sucesso");
     },

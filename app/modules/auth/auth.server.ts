@@ -1,4 +1,3 @@
-import { redirect } from "@remix-run/node";
 import { Authenticator } from "remix-auth";
 import { TOTPStrategy } from "remix-auth-totp";
 import { prisma } from "prisma/index.server";
@@ -89,7 +88,48 @@ export async function getUserData(request: Request) {
   });
 
   const user = await prisma.user.findUnique({ where: { id: session.id } });
-  if (!user) return redirect("/login");
 
-  return user;
+  if (!user) {
+    throw new Error("User not found");
+  }
+
+  const storeId = await getStoreId(user.id, request);
+
+  return {
+    userId: user?.id,
+    email: user?.email,
+    storeId: storeId,
+  };
+}
+
+async function getStoreId(userId: string, request: Request) {
+  if (!userId) return null;
+
+  const authSession = await authSessionStorage.getSession(
+    request.headers.get("cookie")
+  );
+
+  // Check if there's a storeId session token
+  const maybeStoreId = authSession.get("storeId") as string;
+
+  // If there is, return it
+  if (maybeStoreId) return maybeStoreId;
+
+  // If there isn't, query the database for the storeId related to the user
+  const user = await prisma.user.findFirst({
+    where: {
+      id: userId,
+    },
+    include: {
+      ownedStores: true,
+    },
+  });
+
+  const store = user?.ownedStores[0];
+
+  // If this happens something weird is going on
+  if (!store) return null;
+
+  // Return the storeId
+  return store.id;
 }

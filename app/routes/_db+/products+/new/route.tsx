@@ -8,7 +8,6 @@ import type {
 } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { json, useFetcher, useLoaderData } from "@remix-run/react";
-import { clientDb } from "db";
 import { redirectWithSuccess } from "remix-toast";
 import { namedAction } from "remix-utils/named-action";
 import { z } from "zod";
@@ -32,6 +31,7 @@ import { getUserData } from "~/modules/auth/auth.server";
 import { handleErrorReturn } from "~/utils/error-handling.server";
 import { ProductImages } from "../components/ProductImages";
 import { formatCurrency } from "../utils";
+import { prisma } from "prisma/index.server";
 
 export const meta: MetaFunction = () => {
   return [
@@ -123,11 +123,23 @@ export async function action({ request }: ActionFunctionArgs) {
       }[] = [];
 
       if (tagsToBeCreated.length > 0) {
-        tags = await clientDb
-          .insertInto("Tag")
-          .values(tagsToBeCreated)
-          .returningAll()
-          .execute();
+        await prisma.tag.createMany({
+          data: tagsToBeCreated.map((tag) => {
+            return {
+              id: tag.id,
+              name: tag.name,
+              storeId: storeId,
+            };
+          }),
+        });
+
+        tags = await prisma.tag.findMany({
+          where: {
+            id: {
+              in: tagsToBeCreated.map((tag) => tag.id),
+            },
+          },
+        });
       }
 
       const concatenatedTags = [
@@ -141,9 +153,8 @@ export async function action({ request }: ActionFunctionArgs) {
           }),
       ];
 
-      const item = await clientDb
-        .insertInto("Item")
-        .values({
+      const item = await prisma.item.create({
+        data: {
           id: createId(),
           name: productName,
           description: description,
@@ -153,22 +164,15 @@ export async function action({ request }: ActionFunctionArgs) {
           isVisible: productIsVisible === "true",
           itemImages: parsedImageUrls,
           storeId: storeId,
-          updatedAt: new Date(),
-        })
-        .returning("id")
-        .executeTakeFirstOrThrow();
-
-      await clientDb
-        .insertInto("_ItemToTag")
-        .values([
-          ...concatenatedTags.map((tag) => {
-            return {
-              A: item.id,
-              B: tag.id,
-            };
-          }),
-        ])
-        .execute();
+          tags: {
+            connect: concatenatedTags.map((tag) => {
+              return {
+                id: tag.id,
+              };
+            }),
+          },
+        },
+      });
 
       return redirectWithSuccess(`/products/edit/${item?.id}`, {
         message: "Produto criado com sucesso.",
@@ -186,11 +190,11 @@ export async function loader({ request }: LoaderFunctionArgs) {
     return redirect("/login");
   }
 
-  const tags = await clientDb
-    .selectFrom("Tag")
-    .selectAll()
-    .where("Tag.storeId", "=", storeId)
-    .execute();
+  const tags = await prisma.tag.findMany({
+    where: {
+      storeId: storeId,
+    },
+  });
 
   return json({
     ok: true,

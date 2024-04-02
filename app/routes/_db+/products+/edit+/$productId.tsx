@@ -8,7 +8,6 @@ import type {
 } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { useFetcher, useLoaderData } from "@remix-run/react";
-import { clientDb } from "db";
 import {
   jsonWithError,
   jsonWithSuccess,
@@ -147,11 +146,19 @@ export async function action({ request, params }: ActionFunctionArgs) {
       }[] = [];
 
       if (tagsToBeCreated.length > 0) {
-        tags = await clientDb
-          .insertInto("Tag")
-          .values(tagsToBeCreated)
-          .returningAll()
-          .execute();
+        await prisma.tag.createMany({
+          data: tagsToBeCreated,
+          skipDuplicates: true,
+        });
+
+        tags = await prisma.tag.findMany({
+          where: {
+            storeId: storeId,
+            name: {
+              in: tagsToBeCreated.map((tag) => tag.name),
+            },
+          },
+        });
       }
 
       const concatenatedTags = [
@@ -180,22 +187,23 @@ export async function action({ request, params }: ActionFunctionArgs) {
       );
 
       if (tagsToBeDeleted && tagsToBeDeleted?.length > 0) {
-        await clientDb
-          .deleteFrom("Tag")
-          .where(
-            "id",
-            "in",
-            tagsToBeDeleted.map((tag) => tag.id)
-          )
-          .execute();
+        await prisma.tag.deleteMany({
+          where: {
+            id: {
+              in: tagsToBeDeleted.map((tag) => tag.id),
+            },
+          },
+        });
       }
 
       // Make the images diff
       const parsedImageUrls = imageUrls ? JSON.parse(imageUrls) : [];
 
-      await clientDb
-        .updateTable("Item")
-        .set({
+      await prisma.item.update({
+        where: {
+          id: productId,
+        },
+        data: {
           name: productName,
           description: description,
           price: Number(unMaskedPrice) * 100,
@@ -203,27 +211,15 @@ export async function action({ request, params }: ActionFunctionArgs) {
           isAvailable: productIsAvailable === "true",
           isVisible: productIsVisible === "true",
           itemImages: parsedImageUrls,
-          storeId: storeId,
-          updatedAt: new Date(),
-        })
-        .where("id", "=", productId)
-        .returning("id")
-        .executeTakeFirstOrThrow();
-
-      if (concatenatedTags.length > 0) {
-        await clientDb
-          .insertInto("_ItemToTag")
-          .values([
-            ...concatenatedTags.map((tag) => {
+          tags: {
+            connect: concatenatedTags.map((tag) => {
               return {
-                A: productId,
-                B: tag.id,
+                id: tag.id,
               };
             }),
-          ])
-          .onConflict((oc) => oc.columns(["A", "B"]).doNothing())
-          .execute();
-      }
+          },
+        },
+      });
 
       return redirectWithSuccess(`/products`, {
         message: "Produto atualizado com sucesso.",
@@ -252,15 +248,14 @@ export async function action({ request, params }: ActionFunctionArgs) {
         productId,
       } = submission.value;
 
-      await clientDb
-        .insertInto("CustomizationCategory")
-        .values({
+      await prisma.customizationCategory.create({
+        data: {
           name: customizationName,
           min: customizationMin,
           max: customizationMax,
           itemId: productId,
-        })
-        .executeTakeFirstOrThrow();
+        },
+      });
 
       return jsonWithSuccess(
         {
@@ -297,15 +292,16 @@ export async function action({ request, params }: ActionFunctionArgs) {
         customizationName,
       } = submission.value;
 
-      await clientDb
-        .updateTable("CustomizationCategory")
-        .set({
+      await prisma.customizationCategory.update({
+        where: {
+          id: customizationCategoryId,
+        },
+        data: {
           name: customizationName,
           min: customizationMin,
           max: customizationMax,
-        })
-        .where("id", "=", customizationCategoryId)
-        .execute();
+        },
+      });
 
       return jsonWithSuccess(
         {
@@ -334,15 +330,17 @@ export async function action({ request, params }: ActionFunctionArgs) {
       }
       const { customizationCategoryId } = submission.value;
 
-      await clientDb
-        .deleteFrom("ItemCustomization")
-        .where("customizationCategoryId", "=", customizationCategoryId)
-        .execute();
+      await prisma.itemCustomization.deleteMany({
+        where: {
+          customizationCategoryId: customizationCategoryId,
+        },
+      });
 
-      await clientDb
-        .deleteFrom("CustomizationCategory")
-        .where("id", "=", customizationCategoryId)
-        .execute();
+      await prisma.customizationCategory.delete({
+        where: {
+          id: customizationCategoryId,
+        },
+      });
 
       return jsonWithSuccess(
         {
@@ -388,7 +386,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
             price:
               typeof item.price === "number"
                 ? item.price
-                : Number(item.price.replace(/[R$\.,]/g, "")),
+                : Number(item.price.replace(/[R$.,]/g, "")),
           };
         });
 
@@ -396,11 +394,11 @@ export async function action({ request, params }: ActionFunctionArgs) {
         .filter((item) => item.id)
         .map((item) => item.id);
 
-      const currentItems = await clientDb
-        .selectFrom("ItemCustomization")
-        .selectAll()
-        .where("customizationCategoryId", "=", customizationCategoryId)
-        .execute();
+      const currentItems = await prisma.itemCustomization.findMany({
+        where: {
+          customizationCategoryId: customizationCategoryId,
+        },
+      });
 
       const currentIds = currentItems.map((item) => item.id);
 
@@ -431,10 +429,9 @@ export async function action({ request, params }: ActionFunctionArgs) {
       try {
         // Create new items
         if (itemsToBeCreated.length > 0) {
-          await clientDb
-            .insertInto("ItemCustomization")
-            .values(itemsToBeCreated)
-            .execute();
+          await prisma.itemCustomization.createMany({
+            data: itemsToBeCreated,
+          });
         }
 
         // Update existing items
@@ -443,22 +440,26 @@ export async function action({ request, params }: ActionFunctionArgs) {
             continue;
           }
 
-          await clientDb
-            .updateTable("ItemCustomization")
-            .set({
+          await prisma.itemCustomization.update({
+            where: {
+              id: item.id,
+            },
+            data: {
               name: item.name,
               price: item.price,
-            })
-            .where("id", "=", item.id)
-            .execute();
+            },
+          });
         }
 
         // Delete removed items
         if (itemsToBeDeleted.length > 0) {
-          await clientDb
-            .deleteFrom("ItemCustomization")
-            .where("id", "in", itemsToBeDeleted)
-            .execute();
+          await prisma.itemCustomization.deleteMany({
+            where: {
+              id: {
+                in: itemsToBeDeleted,
+              },
+            },
+          });
         }
 
         return jsonWithSuccess({ ok: true }, "Items atualizados");
@@ -492,11 +493,11 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
     },
   });
 
-  const tags = await clientDb
-    .selectFrom("Tag")
-    .selectAll()
-    .where("Tag.storeId", "=", storeId)
-    .execute();
+  const tags = await prisma.tag.findMany({
+    where: {
+      storeId,
+    },
+  });
 
   return json({
     ok: true,

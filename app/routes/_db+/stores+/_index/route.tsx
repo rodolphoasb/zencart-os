@@ -7,7 +7,6 @@ import type {
 } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { json, useFetcher, useLoaderData } from "@remix-run/react";
-import { clientDb } from "db";
 import { getToast, jsonWithSuccess } from "remix-toast";
 import { ClientOnly } from "remix-utils/client-only";
 import { namedAction } from "remix-utils/named-action";
@@ -112,9 +111,11 @@ export async function action({ request }: ActionFunctionArgs) {
         ? String(formData.get("logoUrl"))
         : undefined;
 
-      await clientDb
-        .updateTable("Store")
-        .set({
+      await prisma.store.update({
+        where: {
+          id: storeId,
+        },
+        data: {
           name: storeName,
           description: description,
           category: category,
@@ -123,9 +124,8 @@ export async function action({ request }: ActionFunctionArgs) {
             .split(",")
             .map((value) => value.trim()),
           logoUrl: logoUrl,
-        })
-        .where("Store.id", "=", storeId)
-        .execute();
+        },
+      });
 
       return jsonWithSuccess({ ok: true }, "Loja atualizada com sucesso");
     },
@@ -149,9 +149,8 @@ export async function action({ request }: ActionFunctionArgs) {
         { open: boolean; from: string; to: string }
       >;
 
-      const insertedUnit = await clientDb
-        .insertInto("Unit")
-        .values({
+      const insertedUnit = await prisma.unit.create({
+        data: {
           name: name,
           address: address,
           cep: unMaskedCep,
@@ -159,9 +158,8 @@ export async function action({ request }: ActionFunctionArgs) {
           email: "", // Assuming email is not provided in form data
           typeOfDelivery: typeOfDelivery,
           storeId: storeId, // You need to provide the storeId
-        })
-        .returning("id")
-        .executeTakeFirstOrThrow();
+        },
+      });
 
       // Prepare and insert BusinessHour records for each open day
       const businessHourInserts = Object.entries(parsedBusinessHours).map(
@@ -174,10 +172,9 @@ export async function action({ request }: ActionFunctionArgs) {
       );
 
       if (businessHourInserts.length > 0) {
-        await clientDb
-          .insertInto("BusinessHour")
-          .values(businessHourInserts)
-          .execute();
+        await prisma.businessHour.createMany({
+          data: businessHourInserts,
+        });
       }
 
       return jsonWithSuccess({ ok: true }, "Unidade criada 🎉");
@@ -203,17 +200,18 @@ export async function action({ request }: ActionFunctionArgs) {
         { open: boolean; from: string; to: string }
       >;
 
-      await clientDb
-        .updateTable("Unit")
-        .set({
+      await prisma.unit.update({
+        where: {
+          id: unitId,
+        },
+        data: {
           name: name,
           address: address,
           cep: unMaskedCep,
           phone: unMaskedPhone,
           typeOfDelivery: typeOfDelivery,
-        })
-        .where("id", "=", unitId)
-        .execute();
+        },
+      });
 
       // Prepare and insert BusinessHour records for each open day
       const businessHourInserts = Object.entries(parsedBusinessHours).map(
@@ -226,15 +224,15 @@ export async function action({ request }: ActionFunctionArgs) {
       );
 
       if (businessHourInserts.length > 0) {
-        await clientDb
-          .deleteFrom("BusinessHour")
-          .where("unitId", "=", unitId)
-          .execute();
+        await prisma.businessHour.deleteMany({
+          where: {
+            unitId: unitId,
+          },
+        });
 
-        await clientDb
-          .insertInto("BusinessHour")
-          .values(businessHourInserts)
-          .execute();
+        await prisma.businessHour.createMany({
+          data: businessHourInserts,
+        });
       }
 
       return jsonWithSuccess({ ok: true }, "Unidade atualizada 🎉");
@@ -244,12 +242,17 @@ export async function action({ request }: ActionFunctionArgs) {
       const formData = await request.formData();
       const unitId = Number(formData.get("unitId"));
 
-      await clientDb
-        .deleteFrom("BusinessHour")
-        .where("unitId", "=", unitId)
-        .execute();
+      await prisma.businessHour.deleteMany({
+        where: {
+          unitId: unitId,
+        },
+      });
 
-      await clientDb.deleteFrom("Unit").where("id", "=", unitId).execute();
+      await prisma.unit.delete({
+        where: {
+          id: unitId,
+        },
+      });
 
       return jsonWithSuccess(
         {
@@ -264,13 +267,14 @@ export async function action({ request }: ActionFunctionArgs) {
       const formData = await request.formData();
       const layoutType = String(formData.get("layoutType"));
 
-      await clientDb
-        .updateTable("Store")
-        .set({
+      await prisma.store.update({
+        where: {
+          id: storeId,
+        },
+        data: {
           typeOfLayout: layoutType as "HORIZONTAL" | "VERTICAL",
-        })
-        .where("Store.id", "=", storeId)
-        .execute();
+        },
+      });
 
       return jsonWithSuccess(
         {
@@ -288,16 +292,17 @@ export async function action({ request }: ActionFunctionArgs) {
       const storeAcceptsOrdersOutsideBusinessHours =
         formData.get("storeAcceptsOrdersOutsideBusinessHours") === "true";
 
-      await clientDb
-        .updateTable("Store")
-        .set({
+      await prisma.store.update({
+        where: {
+          id: storeId,
+        },
+        data: {
           isVisible: storeIsVisible,
           acceptsOrdersOnWhatsapp: storeAcceptsOrdersOnWhatsapp,
           acceptsOrdersOutsideBusinessHours:
             storeAcceptsOrdersOutsideBusinessHours,
-        })
-        .where("Store.id", "=", storeId)
-        .execute();
+        },
+      });
 
       return jsonWithSuccess(
         {
@@ -318,11 +323,11 @@ export async function loader({ request }: LoaderFunctionArgs) {
     return redirect("/login");
   }
 
-  const storeData = await clientDb
-    .selectFrom("Store")
-    .selectAll()
-    .where("id", "=", storeId)
-    .executeTakeFirstOrThrow();
+  const storeData = await prisma.store.findUnique({
+    where: {
+      id: storeId,
+    },
+  });
 
   const unitsData = await prisma.unit.findMany({
     where: {
@@ -352,12 +357,12 @@ export async function loader({ request }: LoaderFunctionArgs) {
 export default function Screen() {
   const loaderData = useLoaderData<typeof loader>();
   const fetcher = useFetcher({ key: "updsertStore" });
-  const [storeSlug, setStoreSlug] = useState(loaderData.data.store.slug ?? "");
-  const [logoUrl, setLogoUrl] = useState(loaderData.data.store.logoUrl ?? "");
+  const [storeSlug, setStoreSlug] = useState(loaderData.data.store?.slug ?? "");
+  const [logoUrl, setLogoUrl] = useState(loaderData.data.store?.logoUrl ?? "");
   const [imageIsUploading, setImageIsUploading] = useState(false);
 
   const [selected, setSelected] = useState<Option[]>(
-    loaderData.data.store.paymentMethods.map((value) => ({
+    loaderData.data.store?.paymentMethods.map((value) => ({
       label:
         PAYMENT_OPTIONS.find((option) => option.value === value)?.label ?? "",
       value: value,
@@ -404,7 +409,9 @@ export default function Screen() {
                 body: JSON.stringify({ base64String: [base64String] }),
               });
 
-              const data = await response.json();
+              const data = (await response.json()) as {
+                url: string;
+              }[];
 
               if (data[0].url) {
                 formData.append("logoUrl", getCloudflareImageSrc(data[0].url));
@@ -450,7 +457,9 @@ export default function Screen() {
               <ClientOnly>
                 {() => (
                   <DrawerDialogStyles
-                    layoutType={loaderData.data.store.typeOfLayout}
+                    layoutType={
+                      loaderData.data.store?.typeOfLayout ?? "HORIZONTAL"
+                    }
                   />
                 )}
               </ClientOnly>
@@ -465,7 +474,7 @@ export default function Screen() {
                   name="storeName"
                   placeholder="Ex: Loja do João"
                   className="col-span-3 text-base sm:text-sm"
-                  defaultValue={loaderData.data.store.name ?? ""}
+                  defaultValue={loaderData.data.store?.name ?? ""}
                 />
               </div>
               <div className="flex flex-col gap-y-2">
@@ -477,7 +486,7 @@ export default function Screen() {
                   name="description"
                   placeholder="Ex: Loja do João"
                   className="col-span-3 resize-none text-base sm:text-sm"
-                  defaultValue={loaderData.data.store.description ?? ""}
+                  defaultValue={loaderData.data.store?.description ?? ""}
                 />
               </div>
               <div className="flex flex-col gap-y-2">
@@ -489,18 +498,19 @@ export default function Screen() {
                   name="category"
                   placeholder="Ex: Padaria"
                   className="col-span-3"
-                  defaultValue={loaderData.data.store.category ?? ""}
+                  defaultValue={loaderData.data.store?.category ?? ""}
                 />
               </div>
               <ClientOnly>
                 {() => (
                   <DrawerDialogConfigVisibility
-                    isVisible={loaderData.data.store.isVisible}
+                    isVisible={loaderData.data.store?.isVisible ?? false}
                     acceptsOrdersOutsideBusinessHours={
-                      loaderData.data.store.acceptsOrdersOutsideBusinessHours
+                      loaderData.data.store
+                        ?.acceptsOrdersOutsideBusinessHours ?? false
                     }
                     acceptsOrdersOnWhatsapp={
-                      loaderData.data.store.acceptsOrdersOnWhatsapp
+                      loaderData.data.store?.acceptsOrdersOnWhatsapp ?? false
                     }
                   />
                 )}

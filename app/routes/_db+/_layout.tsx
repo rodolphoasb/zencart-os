@@ -31,9 +31,9 @@ import {
   TooltipTrigger,
 } from "~/components/ui/tooltip";
 import { cn } from "~/utils";
-import { authSessionStorage } from "~/utils/session.server";
 import { ExitButton } from "./components/ExitButton";
 import { getUserData } from "~/modules/auth/auth.server";
+import { authSessionStorage } from "~/modules/auth/session.server";
 
 const navigation = [
   { name: "Home", href: "/home", icon: HomeIcon },
