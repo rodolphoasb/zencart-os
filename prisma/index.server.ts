@@ -4,11 +4,7 @@ import { PrismaNeon } from "@prisma/adapter-neon";
 
 import { PrismaClient } from "@prisma/client";
 
-import dotenv from "dotenv";
-
 import ws from "ws";
-
-dotenv.config();
 
 neonConfig.webSocketConstructor = ws;
 
