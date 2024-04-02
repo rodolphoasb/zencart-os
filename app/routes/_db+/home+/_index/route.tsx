@@ -1,19 +1,19 @@
-import { type MetaFunction } from '@remix-run/node'
+import { type MetaFunction } from "@remix-run/cloudflare";
 
 export const meta: MetaFunction = () => {
   return [
-    { title: 'Home | Zencart' },
+    { title: "Home | Zencart" },
     {
-      property: 'og:title',
-      content: 'Home | Zencart',
+      property: "og:title",
+      content: "Home | Zencart",
     },
     {
-      name: 'description',
+      name: "description",
       content:
-        'Seja bem vindo a Zencart! Nessa parte do site você pode gerenciar seu catálogo digital.',
+        "Seja bem vindo a Zencart! Nessa parte do site você pode gerenciar seu catálogo digital.",
     },
-  ]
-}
+  ];
+};
 
 export default function Screen() {
   return (
@@ -64,5 +64,5 @@ export default function Screen() {
         </div>
       </div>
     </div>
-  )
+  );
 }

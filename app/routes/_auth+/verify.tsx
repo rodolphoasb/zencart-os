@@ -1,40 +1,43 @@
-import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node'
-import { json, redirect } from '@remix-run/node'
-import { Form, useLoaderData } from '@remix-run/react'
-import { authenticator } from '~/modules/auth/auth.server.ts'
-import { commitSession, getSession } from '~/modules/auth/session.server'
+import type {
+  ActionFunctionArgs,
+  LoaderFunctionArgs,
+} from "@remix-run/cloudflare";
+import { json, redirect } from "@remix-run/cloudflare";
+import { Form, useLoaderData } from "@remix-run/react";
+import { authenticator } from "~/modules/auth/auth.server";
+import { commitSession, getSession } from "~/modules/auth/session.server";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   await authenticator.isAuthenticated(request, {
-    successRedirect: '/home',
-  })
+    successRedirect: "/home",
+  });
 
-  const cookie = await getSession(request.headers.get('cookie'))
-  const authEmail = cookie.get('auth:email')
-  const authError = cookie.get(authenticator.sessionErrorKey)
+  const cookie = await getSession(request.headers.get("cookie"));
+  const authEmail = cookie.get("auth:email");
+  const authError = cookie.get(authenticator.sessionErrorKey);
 
-  if (!authEmail) return redirect('/login')
+  if (!authEmail) return redirect("/login");
 
   // Commit session to clear any `flash` error message.
   return json({ authEmail, authError } as const, {
     headers: {
-      'set-cookie': await commitSession(cookie),
+      "set-cookie": await commitSession(cookie),
     },
-  })
+  });
 }
 
 export async function action({ request }: ActionFunctionArgs) {
-  const url = new URL(request.url)
-  const currentPath = url.pathname
+  const url = new URL(request.url);
+  const currentPath = url.pathname;
 
-  await authenticator.authenticate('TOTP', request, {
+  await authenticator.authenticate("TOTP", request, {
     successRedirect: currentPath,
     failureRedirect: currentPath,
-  })
+  });
 }
 
 export default function Verify() {
-  const { authEmail, authError } = useLoaderData<typeof loader>()
+  const { authEmail, authError } = useLoaderData<typeof loader>();
 
   return (
     <div className="mx-auto flex h-screen w-screen max-w-7xl flex-col px-6">
@@ -47,7 +50,7 @@ export default function Verify() {
                 Please check your inbox
               </h1>
               <p className="text-center text-base font-normal text-gray-600">
-                We've sent you a magic link email.
+                We&#39;ve sent you a magic link email.
               </p>
             </div>
           </div>
@@ -107,10 +110,10 @@ export default function Verify() {
         )}
 
         <p className="text-center text-xs leading-relaxed text-gray-400">
-          By continuing, you agree to our{' '}
+          By continuing, you agree to our{" "}
           <span className="clickable underline">Terms of Service</span>
         </p>
       </div>
     </div>
-  )
+  );
 }

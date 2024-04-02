@@ -5,7 +5,7 @@ import {
   type LoaderFunctionArgs,
   type MetaFunction,
   redirect,
-} from "@remix-run/node";
+} from "@remix-run/cloudflare";
 import { useLoaderData } from "@remix-run/react";
 import { jsonWithError } from "remix-toast";
 import { getTenant } from "~/utils/getTenant.server";

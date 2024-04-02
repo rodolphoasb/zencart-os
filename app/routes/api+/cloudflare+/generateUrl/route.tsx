@@ -1,7 +1,7 @@
-import { type ActionFunction,json } from "@remix-run/node";
+import { type ActionFunction, json } from "@remix-run/cloudflare";
 
 export const action: ActionFunction = async ({ request }) => {
-  const requestBody = await request.json();
+  const requestBody = (await request.json()) as { numberOfUrls?: number };
   const numberOfUrls = requestBody.numberOfUrls || 1;
 
   const urls = await Promise.all(
@@ -19,9 +19,9 @@ export const action: ActionFunction = async ({ request }) => {
         body: formData,
       });
 
-      const jsonData = await response.json();
+      const jsonData = (await response.json()) as { result: string };
       return jsonData.result;
-    }),
+    })
   );
 
   return json({ data: urls });

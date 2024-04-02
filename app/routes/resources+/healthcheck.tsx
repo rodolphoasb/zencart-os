@@ -1,5 +1,3 @@
-import { type LoaderFunctionArgs } from "@remix-run/node";
-
-export async function loader({ request }: LoaderFunctionArgs) {
+export async function loader() {
   return new Response("OK");
 }
