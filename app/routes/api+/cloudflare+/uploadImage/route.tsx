@@ -1,12 +1,14 @@
-import { type ActionFunction,json } from "@remix-run/node";
+import { type ActionFunction, json } from "@remix-run/cloudflare";
 
 export const action: ActionFunction = async ({ request }) => {
-  const requestBody = await request.json();
+  const requestBody = (await request.json()) as {
+    base64String: string | string[];
+  };
   const base64Strings = Array.isArray(requestBody.base64String)
     ? requestBody.base64String
     : [requestBody.base64String];
   const encodedCredentials = btoa(
-    `${process.env.R2_BUCKET_NAME}:${process.env.R2_API_TOKEN}`,
+    `${process.env.R2_BUCKET_NAME}:${process.env.R2_API_TOKEN}`
   );
 
   const uploadURL = "https://r2-image-worker.rbravo.workers.dev/upload";

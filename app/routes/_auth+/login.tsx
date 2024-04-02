@@ -3,7 +3,7 @@ import {
   type ActionFunctionArgs,
   json,
   type LoaderFunctionArgs,
-} from "@remix-run/node";
+} from "@remix-run/cloudflare";
 import { Form, useLoaderData } from "@remix-run/react";
 import { Button2 } from "~/components/ui/button2";
 import { Input } from "~/components/ui/input";
