@@ -97,5 +97,5 @@ export function ErrorBoundary() {
 }
 
 export function HydrateFallback() {
-  return <h1>Loading...</h1>;
+  return <h1>Loading..</h1>;
 }
