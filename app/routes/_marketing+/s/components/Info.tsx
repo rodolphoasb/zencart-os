@@ -1,12 +1,12 @@
-import { InfoIcon, Store, Wallet } from 'lucide-react'
+import { InfoIcon, Store, Wallet } from "lucide-react";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from '~/components/ui/accordion'
-import { Drawer, DrawerContent, DrawerTrigger } from '~/components/ui/drawer'
-import { ScrollArea } from '~/components/ui/scroll-area'
+} from "~/components/ui/accordion";
+import { Drawer, DrawerContent, DrawerTrigger } from "~/components/ui/drawer";
+import { ScrollArea } from "~/components/ui/scroll-area";
 
 export function InfoComponent({
   logoUrl,
@@ -15,28 +15,28 @@ export function InfoComponent({
   units,
   paymentMethods,
 }: {
-  logoUrl: string | null
-  storeName?: string | null
-  description?: string | null
-  paymentMethods?: string[]
+  logoUrl: string | null;
+  storeName?: string | null;
+  description?: string | null;
+  paymentMethods?: string[];
   units: ({
     businessHours: {
-      id: number
-      day: string
-      open: string
-      close: string
-      unitId: number
-    }[]
+      id: number;
+      day: string;
+      open: string;
+      close: string;
+      unitId: number;
+    }[];
   } & {
-    id: number
-    name: string
-    address: string
-    cep: string
-    phone: string
-    email: string
-    typeOfDelivery: string
-    storeId: string
-  })[]
+    id: number;
+    name: string;
+    address: string;
+    cep: string;
+    phone: string;
+    email: string;
+    typeOfDelivery: string;
+    storeId: string;
+  })[];
 }) {
   return (
     <Drawer>
@@ -44,15 +44,14 @@ export function InfoComponent({
         <InfoIcon className="h-6 w-6 text-white" />
       </DrawerTrigger>
       <DrawerContent
-        autoFocus={false}
         className="h-auto min-h-36"
         showTopElement={false}
-        onOpenAutoFocus={e => e.preventDefault()}
+        onOpenAutoFocus={(e) => e.preventDefault()}
       >
         <div className="relative flex h-full w-full flex-col">
           <div className="absolute left-1/2 -mt-6 h-20 w-20 -translate-x-1/2 transform overflow-hidden rounded-full">
             <img
-              src={logoUrl || '/assets/images/default-logo.png'}
+              src={logoUrl || "/assets/images/default-logo.png"}
               alt="logo"
               className="h-full w-full rounded-full object-cover"
             />
@@ -71,7 +70,7 @@ export function InfoComponent({
                   </div>
                 </AccordionTrigger>
                 <AccordionContent>
-                  {description ? description : ''}
+                  {description ? description : ""}
                 </AccordionContent>
               </AccordionItem>
               {units.map((unit, index) => (
@@ -98,7 +97,7 @@ export function InfoComponent({
                           {/* Format to Brazilian phone */}
                           {unit.phone.replace(
                             /(\d{2})(\d{5})(\d{4})/,
-                            '($1) $2-$3',
+                            "($1) $2-$3"
                           )}
                         </p>
                       </div>
@@ -107,14 +106,14 @@ export function InfoComponent({
                           Tipo de entrega
                         </p>
                         <p className="text-sm text-gray-600">
-                          {unit.typeOfDelivery === 'deliveryAndPickup' &&
-                            'Entrega e Retirada'}
+                          {unit.typeOfDelivery === "deliveryAndPickup" &&
+                            "Entrega e Retirada"}
                         </p>
                         <p className="text-sm text-gray-600">
-                          {unit.typeOfDelivery === 'delivery' && 'Entrega'}
+                          {unit.typeOfDelivery === "delivery" && "Entrega"}
                         </p>
                         <p className="text-sm text-gray-600">
-                          {unit.typeOfDelivery === 'pickup' && 'Retirada'}
+                          {unit.typeOfDelivery === "pickup" && "Retirada"}
                         </p>
                       </div>
                       <div>
@@ -128,8 +127,8 @@ export function InfoComponent({
                               key={index}
                             >
                               <p>{businessHour.day}</p>
-                              {businessHour.open === 'closed' ||
-                              businessHour.close === 'closed' ? (
+                              {businessHour.open === "closed" ||
+                              businessHour.close === "closed" ? (
                                 <p>Fechado</p>
                               ) : (
                                 <p>{`${businessHour.open} - ${businessHour.close}`}</p>
@@ -151,11 +150,11 @@ export function InfoComponent({
               <div className="mt-2 flex flex-col gap-1 text-sm text-gray-700">
                 {paymentMethods?.map((paymentMethod, index) => (
                   <div key={index}>
-                    {paymentMethod === 'cash' ? <div>Dinheiro</div> : null}
-                    {paymentMethod === 'credit' ? (
+                    {paymentMethod === "cash" ? <div>Dinheiro</div> : null}
+                    {paymentMethod === "credit" ? (
                       <div>Cartão de crédito</div>
                     ) : null}
-                    {paymentMethod === 'debit' ? (
+                    {paymentMethod === "debit" ? (
                       <div>Cartão de débito</div>
                     ) : null}
                   </div>
@@ -166,5 +165,5 @@ export function InfoComponent({
         </div>
       </DrawerContent>
     </Drawer>
-  )
+  );
 }

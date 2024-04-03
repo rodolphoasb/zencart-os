@@ -1,30 +1,30 @@
-'use client'
+"use client";
 
-import { useId } from 'react'
-import { Tab } from '@headlessui/react'
-import clsx from 'clsx'
-import screenshotOrders from '/images/screenshots/orders.png'
-import screenshotProfitLoss from '/images/screenshots/profit-loss.png'
-import storeImage from '/images/screenshots/store.png'
-import { Container } from './Container'
+import { useId } from "react";
+import { Tab } from "@headlessui/react";
+import clsx from "clsx";
+import screenshotOrders from "/src/images/screenshots/orders.png";
+import screenshotProfitLoss from "/src/images/screenshots/profit-loss.png";
+import storeImage from "/src/images/screenshots/store.png";
+import { Container } from "./Container";
 
 interface Feature {
-  name: React.ReactNode
-  summary: string
-  description: string
-  image: HTMLImageElement['src']
-  icon: React.ComponentType
+  name: React.ReactNode;
+  summary: string;
+  description: string;
+  image: HTMLImageElement["src"];
+  icon: React.ComponentType;
 }
 
 const features: Array<Feature> = [
   {
-    name: 'Produtos',
-    summary: 'Gerencie todos os seus produtos em um só lugar.',
+    name: "Produtos",
+    summary: "Gerencie todos os seus produtos em um só lugar.",
     description:
-      'Numa interface simples de usar, você pode adicionar, editar e remover produtos do seu catálogo.',
+      "Numa interface simples de usar, você pode adicionar, editar e remover produtos do seu catálogo.",
     image: screenshotProfitLoss,
     icon: function ReportingIcon() {
-      const id = useId()
+      const id = useId();
       return (
         <>
           <defs>
@@ -48,15 +48,15 @@ const features: Array<Feature> = [
             strokeLinejoin="round"
           />
         </>
-      )
+      );
     },
   },
   {
-    name: 'Catálogo Virtual',
+    name: "Catálogo Virtual",
     summary:
-      'Seus clientes conseguem ver todos os seus produtos em um só lugar.',
+      "Seus clientes conseguem ver todos os seus produtos em um só lugar.",
     description:
-      'Com um link para o seu catálogo, seus clientes podem ver todos os seus produtos, organizados em categorias, com fotos, descrições e preços.',
+      "Com um link para o seu catálogo, seus clientes podem ver todos os seus produtos, organizados em categorias, com fotos, descrições e preços.",
     image: storeImage,
     icon: function InventoryIcon() {
       return (
@@ -76,14 +76,14 @@ const features: Array<Feature> = [
             fill="#fff"
           />
         </>
-      )
+      );
     },
   },
   {
-    name: 'Pedidos',
-    summary: 'Receba pedidos organizados e economize tempo no atendimento.',
+    name: "Pedidos",
+    summary: "Receba pedidos organizados e economize tempo no atendimento.",
     description:
-      'Seus clientes podem fazer pedidos de forma fácil e rápida. Você recebe o pedido organizado, e economiza tempo no atendimento.',
+      "Seus clientes podem fazer pedidos de forma fácil e rápida. Você recebe o pedido organizado, e economiza tempo no atendimento.",
     image: screenshotOrders,
     icon: function ContactsIcon() {
       return (
@@ -98,29 +98,29 @@ const features: Array<Feature> = [
             fill="#fff"
           />
         </>
-      )
+      );
     },
   },
-]
+];
 
 function Feature({
   feature,
   isActive,
   className,
   ...props
-}: React.ComponentPropsWithoutRef<'div'> & {
-  feature: Feature
-  isActive: boolean
+}: React.ComponentPropsWithoutRef<"div"> & {
+  feature: Feature;
+  isActive: boolean;
 }) {
   return (
     <div
-      className={clsx(className, !isActive && 'opacity-75 hover:opacity-100')}
+      className={clsx(className, !isActive && "opacity-75 hover:opacity-100")}
       {...props}
     >
       <div
         className={clsx(
-          'w-9 rounded-lg',
-          isActive ? 'bg-orange-600' : 'bg-slate-500',
+          "w-9 rounded-lg",
+          isActive ? "bg-orange-600" : "bg-slate-500"
         )}
       >
         <svg aria-hidden="true" className="h-9 w-9" fill="none">
@@ -129,8 +129,8 @@ function Feature({
       </div>
       <h3
         className={clsx(
-          'mt-6 text-sm font-medium',
-          isActive ? 'text-orange-600' : 'text-slate-600',
+          "mt-6 text-sm font-medium",
+          isActive ? "text-orange-600" : "text-slate-600"
         )}
       >
         {feature.name}
@@ -138,18 +138,18 @@ function Feature({
       <p className="mt-2   text-xl text-slate-900">{feature.summary}</p>
       <p className="mt-4 text-sm text-slate-600">{feature.description}</p>
     </div>
-  )
+  );
 }
 
 function FeaturesMobile() {
   return (
     <div className="-mx-4 mt-20 flex flex-col gap-y-10 overflow-hidden px-4 sm:-mx-6 sm:px-6 lg:hidden">
-      {features.map(feature => (
+      {features.map((feature) => (
         <div key={feature.summary}>
           <Feature feature={feature} className="mx-auto max-w-2xl" isActive />
           <div className="relative mt-10 pb-10">
             <div className="absolute -inset-x-4 bottom-0 top-8 hidden bg-slate-200 sm:-inset-x-6 sm:flex" />
-            {feature.name === 'Catálogo Virtual' ? (
+            {feature.name === "Catálogo Virtual" ? (
               <>
                 <div className="relative mx-auto hidden w-[52.75rem] overflow-hidden rounded-xl bg-white shadow-lg shadow-slate-900/5 ring-1 ring-slate-500/10 sm:flex">
                   <img
@@ -167,7 +167,7 @@ function FeaturesMobile() {
                     <video
                       controls={false}
                       loop={true}
-                      src={'https://zenvios.io/zencart-demo.mp4'}
+                      src={"https://zenvios.io/zencart-demo.mp4"}
                       muted
                       playsInline
                       autoPlay
@@ -190,7 +190,7 @@ function FeaturesMobile() {
         </div>
       ))}
     </div>
-  )
+  );
 }
 
 function FeaturesDesktop() {
@@ -223,8 +223,8 @@ function FeaturesDesktop() {
                   static
                   key={feature.summary}
                   className={clsx(
-                    'px-5 transition duration-500 ease-in-out ui-not-focus-visible:outline-none',
-                    featureIndex !== selectedIndex && 'opacity-60',
+                    "px-5 transition duration-500 ease-in-out ui-not-focus-visible:outline-none",
+                    featureIndex !== selectedIndex && "opacity-60"
                   )}
                   style={{ transform: `translateX(-${selectedIndex * 100}%)` }}
                   aria-hidden={featureIndex !== selectedIndex}
@@ -245,7 +245,7 @@ function FeaturesDesktop() {
         </>
       )}
     </Tab.Group>
-  )
+  );
 }
 
 export function SecondaryFeatures() {
@@ -270,5 +270,5 @@ export function SecondaryFeatures() {
         <FeaturesDesktop />
       </Container>
     </section>
-  )
+  );
 }

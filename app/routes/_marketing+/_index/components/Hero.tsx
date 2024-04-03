@@ -1,17 +1,16 @@
-import { ClientOnly } from 'remix-utils/client-only'
-import { Container } from './Container'
-import { DrawerDialogWatchVideo } from './DrawerDialogWatchVideo'
+import { ClientOnly } from "remix-utils/client-only";
+import { Container } from "./Container";
+import { DrawerDialogWatchVideo } from "./DrawerDialogWatchVideo";
 
 export function Hero() {
   return (
     <Container className="pb-16 pt-12 text-center lg:pb-32 lg:pt-20">
-      <h1 className="mx-auto max-w-4xl text-4xl font-semibold tracking-tight text-slate-900 sm:text-6xl">
-        Crie seu catálogo digital de produtos e receba pedidos direto no
-        WhatsApp
+      <h1 className="mx-auto max-w-4xl text-4xl font-semibold tracking-tight text-slate-900 sm:text-7xl sm:leading-[86px]">
+        WhatsApp Your Way to More Sales
       </h1>
-      <p className="mx-auto mt-6 max-w-2xl text-lg tracking-tight text-slate-700">
-        Facilite a vida do seu cliente e venda mais. Sem taxas. Sem comissões. E
-        o melhor: sem mensalidade. Pague uma vez e use para sempre.
+      <p className="mx-auto mt-6 max-w-2xl text-xl tracking-tight text-slate-600">
+        Get orders fast on WhatsApp: Show your catalog, connect with customers,
+        and sell with a tap.
       </p>
       {/* <div className="mt-6 flex justify-center">
         <div className="w-fit rounded-full bg-gradient-to-r from-pink-500 via-red-500 to-orange-500 p-[1.5px]">
@@ -36,5 +35,5 @@ export function Hero() {
         <ClientOnly>{() => <DrawerDialogWatchVideo />}</ClientOnly>
       </div>
     </Container>
-  )
+  );
 }

@@ -1,6 +1,6 @@
-import { Container } from './Container'
-import { Logo } from './Logo'
-import { NavLink } from './NavLink'
+import { Container } from "./Container";
+import { Logo } from "./Logo";
+import { NavLink } from "./NavLink";
 
 export function Footer() {
   return (
@@ -10,9 +10,9 @@ export function Footer() {
           <Logo className="mx-auto h-10 w-auto" />
           <nav className="mt-10 text-sm" aria-label="quick links">
             <div className="-my-1 flex justify-center gap-x-6">
-              <NavLink href="#features">Ferramentas</NavLink>
-              <NavLink href="#testimonials">Depoimentos</NavLink>
-              <NavLink href="#pricing">Preços</NavLink>
+              <NavLink href="#features">Features</NavLink>
+              <NavLink href="#testimonials">Testimonials</NavLink>
+              <NavLink href="#pricing">Price</NavLink>
             </div>
           </nav>
         </div>
@@ -44,5 +44,5 @@ export function Footer() {
         </div>
       </Container>
     </footer>
-  )
+  );
 }
