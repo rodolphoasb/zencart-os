@@ -8,17 +8,19 @@ import { Form, useLoaderData } from "@remix-run/react";
 import { Button2 } from "~/components/ui/button2";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
-import { authenticator } from "~/modules/auth/auth.server";
-import { commitSession, getSession } from "~/modules/auth/session.server";
+import { createServices } from "~/modules/auth/services.server";
 import { useIsPending } from "~/utils";
 
-export async function loader({ request }: LoaderFunctionArgs) {
+export async function loader({ context, request }: LoaderFunctionArgs) {
+  const {
+    auth: { authenticator, getSession, commitSession },
+  } = createServices(context);
   await authenticator.isAuthenticated(request, {
     successRedirect: "/home",
   });
 
   const session = await getSession(request.headers.get("Cookie"));
-  const authError = session.get(authenticator.sessionErrorKey);
+  const authError = session.get("auth:error");
 
   // Commit session to clear any `flash` error message.
   return json(
@@ -31,7 +33,10 @@ export async function loader({ request }: LoaderFunctionArgs) {
   );
 }
 
-export async function action({ request }: ActionFunctionArgs) {
+export async function action({ context, request }: ActionFunctionArgs) {
+  const {
+    auth: { authenticator },
+  } = createServices(context);
   await authenticator.authenticate("TOTP", request, {
     // The `successRedirect` route it's required.
     // User is not authenticated yet.

@@ -19,7 +19,6 @@ import { Label } from "~/components/ui/label";
 import type { Option } from "~/components/ui/multi-select";
 import { MultipleSelector } from "~/components/ui/multi-select";
 import { Textarea } from "~/components/ui/textarea";
-import { getUserData } from "~/modules/auth/auth.server";
 import { prisma } from "prisma/index.server";
 import { handleErrorReturn } from "~/utils/error-handling.server";
 import { DrawerDialogConfigVisibility } from "../components/DrawerDialogConfigVisibility";
@@ -28,6 +27,7 @@ import { DrawerDialogDeleteUnit } from "../components/DrawerDialogDeleteUnit";
 import { DrawerDialogEditUnit } from "../components/DrawerDialogEditUnit";
 import { DrawerDialogStyles } from "../components/Estilos";
 import { LogoUpload } from "../components/LogoUpload";
+import { getUserData } from "~/modules/auth/services.server";
 
 const PAYMENT_OPTIONS: Option[] = [
   { label: "Dinheiro", value: "cash" },
@@ -77,8 +77,8 @@ export const unitSchema = z.object({
   businessHours: z.string(),
 });
 
-export async function action({ request }: ActionFunctionArgs) {
-  const userData = await getUserData(request);
+export async function action({ context, request }: ActionFunctionArgs) {
+  const userData = await getUserData(context, request);
   const storeId = userData?.storeId;
 
   if (!userData?.userId) {
@@ -314,9 +314,9 @@ export async function action({ request }: ActionFunctionArgs) {
   });
 }
 
-export async function loader({ request }: LoaderFunctionArgs) {
+export async function loader({ context, request }: LoaderFunctionArgs) {
   const { toast, headers } = await getToast(request);
-  const userData = await getUserData(request);
+  const userData = await getUserData(context, request);
   const storeId = userData?.storeId;
 
   if (!storeId) {

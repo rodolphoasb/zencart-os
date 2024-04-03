@@ -4,35 +4,34 @@ import type {
 } from "@remix-run/cloudflare";
 import { json, redirect } from "@remix-run/cloudflare";
 import { Form, useLoaderData } from "@remix-run/react";
-import { authenticator } from "~/modules/auth/auth.server";
-import { commitSession, getSession } from "~/modules/auth/session.server";
+import { createServices } from "~/modules/auth/services.server";
 
-export async function loader({ request }: LoaderFunctionArgs) {
-  await authenticator.isAuthenticated(request, {
-    successRedirect: "/home",
-  });
+export async function loader({ context, request }: LoaderFunctionArgs) {
+  const {
+    auth: { getSession, commitSession },
+  } = createServices(context);
 
-  const cookie = await getSession(request.headers.get("cookie"));
-  const authEmail = cookie.get("auth:email");
-  const authError = cookie.get(authenticator.sessionErrorKey);
-
+  const session = await getSession(request.headers.get("cookie"));
+  const authEmail = session.get("auth:email");
   if (!authEmail) return redirect("/login");
+  const authError = session.get("auth:error");
 
   // Commit session to clear any `flash` error message.
   return json({ authEmail, authError } as const, {
     headers: {
-      "set-cookie": await commitSession(cookie),
+      "set-cookie": await commitSession(session),
     },
   });
 }
 
-export async function action({ request }: ActionFunctionArgs) {
+export async function action({ request, context }: ActionFunctionArgs) {
+  const {
+    auth: { authenticator },
+  } = createServices(context);
   const url = new URL(request.url);
-  const currentPath = url.pathname;
-
   await authenticator.authenticate("TOTP", request, {
-    successRedirect: currentPath,
-    failureRedirect: currentPath,
+    successRedirect: url.pathname,
+    failureRedirect: url.pathname,
   });
 }
 

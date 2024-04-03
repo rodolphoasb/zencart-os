@@ -1,9 +1,12 @@
 import type { LoaderFunctionArgs } from "@remix-run/cloudflare";
-import { authenticator } from "~/modules/auth/auth.server";
+import { createServices } from "~/modules/auth/services.server";
 
-export async function loader({ request }: LoaderFunctionArgs) {
+export async function loader({ request, context }: LoaderFunctionArgs) {
+  const {
+    auth: { authenticator },
+  } = createServices(context);
   await authenticator.authenticate("TOTP", request, {
-    successRedirect: "/home",
+    successRedirect: "/account",
     failureRedirect: "/login",
   });
 }

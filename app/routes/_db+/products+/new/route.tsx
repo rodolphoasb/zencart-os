@@ -27,11 +27,11 @@ import {
 } from "~/components/ui/select";
 import { Switch } from "~/components/ui/switch";
 import { Textarea } from "~/components/ui/textarea";
-import { getUserData } from "~/modules/auth/auth.server";
 import { handleErrorReturn } from "~/utils/error-handling.server";
 import { ProductImages } from "../components/ProductImages";
 import { formatCurrency } from "../utils";
 import { prisma } from "prisma/index.server";
+import { getUserData } from "~/modules/auth/services.server";
 
 export const meta: MetaFunction = () => {
   return [
@@ -68,8 +68,8 @@ const newProductSchema = z.object({
   productTags: z.string(),
 });
 
-export async function action({ request }: ActionFunctionArgs) {
-  const userData = await getUserData(request);
+export async function action({ context, request }: ActionFunctionArgs) {
+  const userData = await getUserData(context, request);
   const storeId = userData?.storeId;
 
   if (!storeId) {
@@ -182,8 +182,8 @@ export async function action({ request }: ActionFunctionArgs) {
   });
 }
 
-export async function loader({ request }: LoaderFunctionArgs) {
-  const userData = await getUserData(request);
+export async function loader({ context, request }: LoaderFunctionArgs) {
+  const userData = await getUserData(context, request);
   const storeId = userData?.storeId;
 
   if (!storeId) {

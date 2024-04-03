@@ -34,7 +34,7 @@ import { cn } from "~/utils";
 
 import { ExitButton } from "./components/ExitButton";
 import { authSessionStorage } from "~/modules/auth/session.server";
-import { getUserData } from "~/modules/auth/auth.server";
+import { getUserData } from "~/modules/auth/services.server";
 
 const navigation = [
   { name: "Home", href: "/home", icon: HomeIcon },
@@ -50,8 +50,8 @@ const navigation = [
   },
 ];
 
-export const loader: LoaderFunction = async ({ request }) => {
-  const user = await getUserData(request);
+export const loader: LoaderFunction = async ({ context, request }) => {
+  const user = await getUserData(context, request);
   await sleep(1000);
 
   if (!user?.userId) {
@@ -195,7 +195,7 @@ export default function Screen() {
                             <li key={`${item.name}-mobile`}>
                               <NavLink
                                 to={item.href}
-                                className={({ isActive, isPending }) =>
+                                className={({ isActive }) =>
                                   cn(
                                     isActive
                                       ? "font-semibold text-gray-700"
@@ -261,7 +261,7 @@ export default function Screen() {
                             <TooltipTrigger>
                               <NavLink
                                 to={item.href}
-                                className={({ isActive, isPending }) =>
+                                className={({ isActive }) =>
                                   cn(
                                     isActive
                                       ? "bg-gray-200 text-gray-700"
@@ -287,7 +287,7 @@ export default function Screen() {
                 </li>
 
                 <div className="mt-auto flex items-center justify-between py-4">
-                  {data?.user ? (
+                  {user ? (
                     <ExitButton
                       isDialogOpen={isDialogOpen}
                       setIsDialogOpen={setIsDialogOpen}
@@ -331,7 +331,7 @@ export default function Screen() {
                       <li key={`${item.name}-full-desktop`}>
                         <NavLink
                           to={item.href}
-                          className={({ isActive, isPending }) =>
+                          className={({ isActive }) =>
                             cn(
                               isActive
                                 ? "font-semibold text-gray-700"

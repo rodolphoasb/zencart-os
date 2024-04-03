@@ -11,7 +11,7 @@ import { Button2 } from "~/components/ui/button2";
 import { prisma } from "prisma/index.server";
 import { columns } from "./components/columns";
 import { DataTable } from "./components/data-table";
-import { getUserData } from "~/modules/auth/auth.server";
+import { getUserData } from "~/modules/auth/services.server";
 
 export const meta: MetaFunction = () => {
   return [
@@ -57,8 +57,8 @@ export async function action({ request }: ActionFunctionArgs) {
   });
 }
 
-export async function loader({ request }: LoaderFunctionArgs) {
-  const userData = await getUserData(request);
+export async function loader({ context, request }: LoaderFunctionArgs) {
+  const userData = await getUserData(context, request);
   const storeId = userData?.storeId;
 
   if (!storeId) {
