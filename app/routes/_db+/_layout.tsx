@@ -33,8 +33,7 @@ import {
 import { cn } from "~/utils";
 
 import { ExitButton } from "./components/ExitButton";
-import { authSessionStorage } from "~/modules/auth/session.server";
-import { getUserData } from "~/modules/auth/services.server";
+import { createServices, getUserData } from "~/modules/auth/services.server";
 
 const navigation = [
   { name: "Home", href: "/home", icon: HomeIcon },
@@ -53,6 +52,9 @@ const navigation = [
 export const loader: LoaderFunction = async ({ context, request }) => {
   const user = await getUserData(context, request);
   await sleep(1000);
+  const {
+    auth: { getSession, commitSession },
+  } = createServices(context);
 
   if (!user?.userId) {
     throw redirect("/login");
@@ -62,11 +64,9 @@ export const loader: LoaderFunction = async ({ context, request }) => {
     throw redirect("/onboarding?step=1");
   }
 
-  const authSession = await authSessionStorage.getSession(
-    request.headers.get("cookie")
-  );
+  const authSession = await getSession(request.headers.get("cookie"));
 
-  authSession.set("storeId", user.storeId);
+  // authSession.set("storeId", user.storeId);
 
   return json(
     {
@@ -77,7 +77,7 @@ export const loader: LoaderFunction = async ({ context, request }) => {
     },
     {
       headers: {
-        "set-cookie": await authSessionStorage.commitSession(authSession),
+        "set-cookie": await commitSession(authSession),
       },
     }
   );
