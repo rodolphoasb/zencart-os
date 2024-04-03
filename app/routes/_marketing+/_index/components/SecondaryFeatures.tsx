@@ -18,10 +18,10 @@ interface Feature {
 
 const features: Array<Feature> = [
   {
-    name: "Produtos",
-    summary: "Gerencie todos os seus produtos em um só lugar.",
+    name: "Products",
+    summary: "Manage all your products in one place.",
     description:
-      "Numa interface simples de usar, você pode adicionar, editar e remover produtos do seu catálogo.",
+      "In a user-friendly interface, you can add, edit, and remove products from your catalog with ease.",
     image: screenshotProfitLoss,
     icon: function ReportingIcon() {
       const id = useId();
@@ -52,11 +52,10 @@ const features: Array<Feature> = [
     },
   },
   {
-    name: "Catálogo Virtual",
-    summary:
-      "Seus clientes conseguem ver todos os seus produtos em um só lugar.",
+    name: "Digital Catalog",
+    summary: "Your customers can see all your products in one place.",
     description:
-      "Com um link para o seu catálogo, seus clientes podem ver todos os seus produtos, organizados em categorias, com fotos, descrições e preços.",
+      "With a link to your catalog, your customers can browse all your products, organized into categories, complete with photos, descriptions, and prices.",
     image: storeImage,
     icon: function InventoryIcon() {
       return (
@@ -80,10 +79,10 @@ const features: Array<Feature> = [
     },
   },
   {
-    name: "Pedidos",
-    summary: "Receba pedidos organizados e economize tempo no atendimento.",
+    name: "Orders",
+    summary: "Receive organized orders and save time on customer service.",
     description:
-      "Seus clientes podem fazer pedidos de forma fácil e rápida. Você recebe o pedido organizado, e economiza tempo no atendimento.",
+      "Your customers can easily and quickly place orders. You receive the order organized, saving time on customer service.",
     image: screenshotOrders,
     icon: function ContactsIcon() {
       return (
@@ -149,7 +148,7 @@ function FeaturesMobile() {
           <Feature feature={feature} className="mx-auto max-w-2xl" isActive />
           <div className="relative mt-10 pb-10">
             <div className="absolute -inset-x-4 bottom-0 top-8 hidden bg-slate-200 sm:-inset-x-6 sm:flex" />
-            {feature.name === "Catálogo Virtual" ? (
+            {feature.name === "Digital Catalog" ? (
               <>
                 <div className="relative mx-auto hidden w-[52.75rem] overflow-hidden rounded-xl bg-white shadow-lg shadow-slate-900/5 ring-1 ring-slate-500/10 sm:flex">
                   <img
@@ -161,7 +160,7 @@ function FeaturesMobile() {
                 </div>
                 <div
                   id="video"
-                  className="mt-14 flex flex w-full w-full justify-center sm:mt-24 sm:hidden"
+                  className="mt-14 flex w-full justify-center sm:mt-24 sm:hidden"
                 >
                   <div className="w-full overflow-hidden rounded-lg sm:w-10/12 ">
                     <video
@@ -256,14 +255,14 @@ export function SecondaryFeatures() {
       className="pb-14 pt-20 sm:pb-20 sm:pt-32 lg:pb-32"
     >
       <Container>
-        <div className="mx-auto max-w-2xl md:text-center">
-          <h2 className="  text-3xl tracking-tight text-slate-900 sm:text-4xl">
-            Simplifique a vida do seu cliente.
+        <div className="mx-auto md:text-center">
+          <h2 className="font-semibold text-3xl tracking-tight text-slate-900 sm:text-4xl md:text-5xl">
+            Simplify Your Customer&#39;s Life.
           </h2>
           <p className="mt-4 text-lg tracking-tight text-slate-700">
-            Com seu Zencart, seus clientes podem fazer pedidos de forma fácil e
-            rápida. Você recebe o pedido organizado, e economiza tempo no
-            atendimento.
+            With your Zencart, your customers can place orders easily and
+            quickly. <br /> You receive the order organized, saving time on
+            service.
           </p>
         </div>
         <FeaturesMobile />

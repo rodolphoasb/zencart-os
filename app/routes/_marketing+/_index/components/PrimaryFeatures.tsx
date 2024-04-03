@@ -11,27 +11,27 @@ import { Container } from "./Container";
 
 const features = [
   {
-    title: "Crie seus produtos",
+    title: "Create Your Products",
     description:
-      "Liste todos seus produtos e controle o que aparece no seu catálogo de forma fácil e intuitiva.",
+      "Easily list all your products and control what appears in your catalog with intuitive simplicity.",
     image: screenshotProducts,
   },
   {
-    title: "Adicione fotos, descrição e tags",
+    title: "Add Photos, Descriptions, and Tags",
     description:
-      "Adicione as informações do seu produto e quantas fotos quiser para deixar seu produto ainda mais atrativo.",
+      "Enhance your product listings with photos, detailed descriptions, and tags to make your offerings more appealing.",
     image: screenshotProduct,
   },
   {
-    title: "Crie categorias para facilitar a busca",
+    title: "Organize with Categories for Easy Searching",
     description:
-      "Crie as categorias que aparecem no seu catálogo para organizar seus produtos de forma flexível.",
+      "Create categories within your catalog to flexibly organize your products and streamline the browsing experience.",
     image: screenshotCategories,
   },
   {
-    title: "Receba pedidos direto no WhatsApp",
+    title: "Receive Orders Directly on WhatsApp",
     description:
-      "Pare de perder tempo com pedidos desorganizados. Receba pedidos direto no WhatsApp e organize tudo em um só lugar.",
+      "Say goodbye to the hassle of disorganized orders. Get orders directly on WhatsApp and keep everything organized in one place.",
     image: screenshotOrder,
   },
 ];
@@ -101,7 +101,7 @@ export function PrimaryFeatures() {
                       <h3>
                         <Tab
                           className={clsx(
-                            "  text-lg ui-not-focus-visible:outline-none",
+                            "font-medium text-lg ui-not-focus-visible:outline-none",
                             selectedIndex === featureIndex
                               ? "text-black lg:text-white"
                               : "text-white hover:text-white lg:text-white"

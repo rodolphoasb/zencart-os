@@ -3,41 +3,40 @@ import {
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from '~/components/ui/accordion'
-import { Container } from './Container'
+} from "~/components/ui/accordion";
+import { Container } from "./Container";
 
 const faqs = [
   {
-    question: 'Como o Zencart functiona com o WhatsApp?',
+    question: "How does Zencart work with WhatsApp?",
     answer:
-      'Seus clientes podem navegar pela sua loja no Zencart, adicionar produtos ao carrinho e enviar os detalhes do pedido diretamente para o vendedor via WhatsApp. Isso simplifica o processo de pedidos para clientes e comerciantes.',
+      "Your customers can browse your Zencart store, add products to their cart, and send the order details directly to the seller via WhatsApp. This streamlines the ordering process for both customers and merchants.",
   },
   {
-    question: 'Quais garantias eu tenho?',
+    question: "What guarantees do I have?",
     answer:
-      'O risco é todo nosso. Se não gostar ou sentir que não é para você, devolvemos todo seu dinheiro dentro dos primeiros 7 dias.',
+      "The risk is all ours. If you don't like it or feel it's not for you, we'll refund your money in full within the first 7 days.",
   },
   {
-    question: 'Existe um limite de produtos que posso adicionar?',
+    question: "Is there a limit to the number of products I can add?",
     answer:
-      'Não, você pode adicionar quantos produtos quiser. A única limitação é em relação às fotos. Cada loja pode ter no máximo 1000 fotos. Para comprar um pacote de 1000 fotos adicionais (R$ 99,00 - uma única vez), entre em contato conosco.',
-  },
-
-  {
-    question: 'Existe algum contrato de fidelidade? E taxas escondidas?',
-    answer: 'Não, você compra o Zencart e ele é seu. Sem taxas escondidas.',
+      "No, you can add as many products as you want. The only limitation is on photos. Each store can have a maximum of 1000 photos. To purchase an additional 1000 photo package (R$ 99.00 - one-time fee), please contact us.",
   },
   {
-    question: 'Existe algum limite de quantidade de pedidos?',
-    answer:
-      'Não, você pode receber quantos pedidos quiser. Existimos para ajudar você a prosperar, quanto mais pedidos melhor!',
+    question: "Is there a loyalty contract? Any hidden fees?",
+    answer: "No, you purchase Zencart and it's yours. No hidden fees.",
   },
   {
-    question: 'Perdi minha senha. Como faço para recuperá-la?',
+    question: "Is there any limit to the number of orders I can receive?",
     answer:
-      'Você pode recuperar sua senha clicando em "Esqueceu sua senha?" na tela de login. Você receberá um e-mail com um link para redefinir sua senha.',
+      "No, you can receive as many orders as you like. We exist to help you thrive, the more orders the better!",
   },
-]
+  {
+    question: "I lost my password. How can I recover it?",
+    answer:
+      "Actually, we don't use passwords. You can access your store using the email you registered with, plus the magic link we'll send to you. If you encounter any issues, please contact us.",
+  },
+];
 
 export function Faqs() {
   return (
@@ -59,10 +58,11 @@ export function Faqs() {
             id="faq-title"
             className="text-3xl font-semibold tracking-tight text-gray-900"
           >
-            Perguntas frequentes
+            Frequently Asked Questions
           </h2>
           <p className="mt-4 text-lg tracking-tight text-gray-700">
-            Não encontrou o que procurava? Manda um oi e a gente te ajuda! 👋
+            Didn&#39;t find what you were looking for? Send us a hello and
+            we&#39;ll help you out! 👋
           </p>
         </div>
         <Accordion className="mt-8" type="single" collapsible>
@@ -83,5 +83,5 @@ export function Faqs() {
         </Accordion>
       </Container>
     </section>
-  )
+  );
 }

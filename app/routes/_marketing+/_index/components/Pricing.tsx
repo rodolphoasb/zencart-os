@@ -1,8 +1,8 @@
-import clsx from 'clsx'
-import { AlarmClockIcon } from 'lucide-react'
-import posthog from 'posthog-js'
-import { Button2 } from '~/components/ui/button2'
-import { Container } from './Container'
+import clsx from "clsx";
+import { AlarmClockIcon } from "lucide-react";
+import posthog from "posthog-js";
+import { Button2 } from "~/components/ui/button2";
+import { Container } from "./Container";
 
 // function SwirlyDoodle(props: React.ComponentPropsWithoutRef<"svg">) {
 //   return (
@@ -29,18 +29,18 @@ function Plan({
   features,
   featured = false,
 }: {
-  name: string
-  price: string
-  description: string
-  href: string
-  features: Array<string>
-  featured?: boolean
+  name: string;
+  price: string;
+  description: string;
+  href: string;
+  features: Array<string>;
+  featured?: boolean;
 }) {
   return (
     <section
       className={clsx(
-        'flex flex-col rounded-3xl px-6 shadow-xl sm:px-8',
-        featured ? ' bg-white py-8' : 'lg:py-8',
+        "flex flex-col rounded-3xl px-6 shadow-xl sm:px-8",
+        featured ? " bg-white py-8" : "lg:py-8"
       )}
     >
       <div className="flex w-full flex-col items-center justify-center">
@@ -53,8 +53,8 @@ function Plan({
       <h3 className="mt-5 text-lg font-medium text-black">{name}</h3>
       <p
         className={clsx(
-          'mt-2 text-base',
-          featured ? 'text-black' : 'text-slate-400',
+          "mt-2 text-base",
+          featured ? "text-black" : "text-slate-400"
         )}
       >
         {description}
@@ -73,11 +73,11 @@ function Plan({
 
       <ul
         className={clsx(
-          'order-last mt-10 flex flex-col gap-y-3 text-sm',
-          featured ? 'text-black' : 'text-slate-200',
+          "order-last mt-10 flex flex-col gap-y-3 text-sm",
+          featured ? "text-black" : "text-slate-200"
         )}
       >
-        {features.map(feature => (
+        {features.map((feature) => (
           <li key={feature} className="flex items-center">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -104,13 +104,13 @@ function Plan({
         rel="noopener noreferrer"
         target="_blank"
         onClick={() => {
-          posthog.capture('clicked_buy_now')
+          posthog.capture("clicked_buy_now");
         }}
       >
         Começar agora
       </Button2>
     </section>
-  )
+  );
 }
 
 export function Pricing() {
@@ -133,22 +133,22 @@ export function Pricing() {
         <div className="mt-16 flex w-full justify-center">
           <Plan
             featured
-            name="Plano Vitalício"
+            name="Lifetime Plan"
             price="R$ 59,90"
-            description="Sem taxas, comissões ou mensalidade."
+            description="No fees, commissions, or monthly charges."
             href="https://pay.kiwify.com.br/ybcO2sO"
             features={[
-              'Produtos ilimitados (Limite de 1000 fotos por loja)',
-              'Economia de tempo no atendimento',
-              'Link para bio do Instagram',
-              'Seu catálogo pronto em poucos minutos',
-              'Acesso pelo computador ou celular',
-              'Pedidos iliimitados no WhatsApp',
-              'Novas funcionalidades todos os meses',
+              "Unlimited products (Limit of 1000 photos per store)",
+              "Time-saving in customer service",
+              "Link for Instagram bio",
+              "Your catalog ready in minutes",
+              "Access via computer or mobile",
+              "Unlimited orders on WhatsApp",
+              "New features every month",
             ]}
           />
         </div>
       </Container>
     </section>
-  )
+  );
 }
