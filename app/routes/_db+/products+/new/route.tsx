@@ -30,8 +30,7 @@ import { Textarea } from "~/components/ui/textarea";
 import { handleErrorReturn } from "~/utils/error-handling.server";
 import { ProductImages } from "../components/ProductImages";
 import { formatCurrency } from "../utils";
-import { prisma } from "prisma/index.server";
-import { getUserData } from "~/modules/auth/services.server";
+import { createServices, getUserData } from "~/modules/auth/services.server";
 
 export const meta: MetaFunction = () => {
   return [
@@ -70,6 +69,7 @@ const newProductSchema = z.object({
 
 export async function action({ context, request }: ActionFunctionArgs) {
   const userData = await getUserData(context, request);
+  const { db: prisma } = createServices(context);
   const storeId = userData?.storeId;
 
   if (!storeId) {
@@ -184,6 +184,7 @@ export async function action({ context, request }: ActionFunctionArgs) {
 
 export async function loader({ context, request }: LoaderFunctionArgs) {
   const userData = await getUserData(context, request);
+  const { db: prisma } = createServices(context);
   const storeId = userData?.storeId;
 
   if (!storeId) {

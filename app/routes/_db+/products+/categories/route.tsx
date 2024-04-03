@@ -12,12 +12,11 @@ import { ClientOnly } from "remix-utils/client-only";
 import { namedAction } from "remix-utils/named-action";
 import { z } from "zod";
 import { Button2 } from "~/components/ui/button2";
-import { prisma } from "prisma/index.server";
 import { handleErrorReturn } from "~/utils/error-handling.server";
 import { columns } from "./components/columns";
 import { DataTable } from "./components/data-table";
 import { DrawerDialogCreateCategory } from "./components/DrawerDialogCreateCategory";
-import { getUserData } from "~/modules/auth/services.server";
+import { createServices, getUserData } from "~/modules/auth/services.server";
 
 export const meta: MetaFunction = () => {
   return [
@@ -54,6 +53,7 @@ const deleteCategorySchema = z.object({
 
 export async function action({ context, request }: ActionFunctionArgs) {
   const userData = await getUserData(context, request);
+  const { db: prisma } = createServices(context);
   const storeId = userData?.storeId;
 
   if (!storeId) {
@@ -176,6 +176,7 @@ export async function action({ context, request }: ActionFunctionArgs) {
 
 export async function loader({ context, request }: LoaderFunctionArgs) {
   const userData = await getUserData(context, request);
+  const { db: prisma } = createServices(context);
   const storeId = userData?.storeId;
 
   if (!storeId) {

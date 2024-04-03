@@ -32,14 +32,13 @@ import {
 } from "~/components/ui/select";
 import { Switch } from "~/components/ui/switch";
 import { Textarea } from "~/components/ui/textarea";
-import { prisma } from "prisma/index.server";
 import { handleErrorReturn } from "~/utils/error-handling.server";
 import { formatCurrency } from "../utils";
 import { columns } from "./components/columns";
 import { DataTable } from "./components/data-table";
 import { DDCreateItemCustomizationCategory } from "./components/DDCreateCustomizationCategory";
 import { ProductImagesEdit } from "./components/ProductImagesEdit";
-import { getUserData } from "~/modules/auth/services.server";
+import { createServices, getUserData } from "~/modules/auth/services.server";
 
 export const meta: MetaFunction = () => {
   return [
@@ -92,6 +91,7 @@ const createCustomizationCategorySchema = z.object({
 
 export async function action({ context, request, params }: ActionFunctionArgs) {
   const userData = await getUserData(context, request);
+  const { db: prisma } = createServices(context);
   const storeId = userData?.storeId;
 
   if (!storeId) {
@@ -473,6 +473,7 @@ export async function action({ context, request, params }: ActionFunctionArgs) {
 export async function loader({ context, params, request }: LoaderFunctionArgs) {
   const productId = params.productId;
   const userData = await getUserData(context, request);
+  const { db: prisma } = createServices(context);
   const storeId = userData?.storeId;
 
   if (!storeId) {

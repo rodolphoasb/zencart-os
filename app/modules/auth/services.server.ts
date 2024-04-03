@@ -6,7 +6,10 @@ import {
 } from "@remix-run/cloudflare";
 import { Authenticator } from "remix-auth";
 import { TOTPStrategy } from "remix-auth-totp";
-import { prisma } from "prisma/index.server";
+import { Pool, neonConfig } from "@neondatabase/serverless";
+import { PrismaNeon } from "@prisma/adapter-neon";
+import { PrismaClient } from "@prisma/client";
+import ws from "ws";
 
 type User = {
   id: string;
@@ -16,6 +19,7 @@ type User = {
 export interface ServicesContext {
   env: AppLoadContext["cloudflare"]["env"];
   auth: ReturnType<typeof createAuth>;
+  db: PrismaClient;
 }
 
 export function createServices(context: AppLoadContext) {
@@ -23,6 +27,15 @@ export function createServices(context: AppLoadContext) {
   // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/get#smart_self-overwriting_lazy_getters
   const servicesContext: ServicesContext = {
     env: context.cloudflare.env,
+    get db() {
+      neonConfig.webSocketConstructor = ws;
+      const connectionString = `${context.cloudflare.env.DATABASE_URL}`;
+      const pool = new Pool({ connectionString });
+      const adapter = new PrismaNeon(pool);
+      const prisma = new PrismaClient({ adapter });
+
+      return prisma;
+    },
     get auth() {
       console.log("get auth() self-overwriting");
       // @ts-expect-error The operand of a 'delete' operator must be optional. ts(2790)
@@ -36,6 +49,7 @@ export function createServices(context: AppLoadContext) {
 
 export function createAuth({
   env: { SESSION_SECRET, ENVIRONMENT, TOTP_SECRET, KV, LOOPS_API_KEY },
+  db,
 }: ServicesContext) {
   globalThis.Buffer = Buffer;
   const sessionStorage = createWorkersKVSessionStorage<
@@ -102,10 +116,10 @@ export function createAuth({
         },
       },
       async ({ email }) => {
-        let user = await prisma.user.findUnique({ where: { email } });
+        let user = await db.user.findUnique({ where: { email } });
 
         if (!user) {
-          user = await prisma.user.create({ data: { email } });
+          user = await db.user.create({ data: { email } });
           if (!user) throw new Error("Whoops! Unable to create user.");
         }
 
@@ -124,12 +138,13 @@ export function createAuth({
 export async function getUserData(context: AppLoadContext, request: Request) {
   const {
     auth: { authenticator },
+    db,
   } = createServices(context);
   const session = await authenticator.isAuthenticated(request, {
     failureRedirect: "/login",
   });
 
-  const user = await prisma.user.findUnique({ where: { id: session.id } });
+  const user = await db.user.findUnique({ where: { id: session.id } });
 
   if (!user) {
     throw new Error("User not found");
@@ -153,6 +168,7 @@ async function getStoreId(
 
   const {
     auth: { getSession },
+    db,
   } = createServices(context);
   const authSession = await getSession(request.headers.get("cookie"));
 
@@ -164,7 +180,7 @@ async function getStoreId(
   if (maybeStoreId) return maybeStoreId;
 
   // If there isn't, query the database for the storeId related to the user
-  const user = await prisma.user.findFirst({
+  const user = await db.user.findFirst({
     where: {
       id: userId,
     },

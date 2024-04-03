@@ -8,10 +8,9 @@ import { Link, useLoaderData } from "@remix-run/react";
 import { jsonWithSuccess } from "remix-toast";
 import { namedAction } from "remix-utils/named-action";
 import { Button2 } from "~/components/ui/button2";
-import { prisma } from "prisma/index.server";
 import { columns } from "./components/columns";
 import { DataTable } from "./components/data-table";
-import { getUserData } from "~/modules/auth/services.server";
+import { createServices, getUserData } from "~/modules/auth/services.server";
 
 export const meta: MetaFunction = () => {
   return [
@@ -27,7 +26,8 @@ export const meta: MetaFunction = () => {
   ];
 };
 
-export async function action({ request }: ActionFunctionArgs) {
+export async function action({ context, request }: ActionFunctionArgs) {
+  const { db: prisma } = createServices(context);
   return namedAction(request, {
     async deleteProduct() {
       const formData = await request.formData();
@@ -58,6 +58,7 @@ export async function action({ request }: ActionFunctionArgs) {
 }
 
 export async function loader({ context, request }: LoaderFunctionArgs) {
+  const { db: prisma } = createServices(context);
   const userData = await getUserData(context, request);
   const storeId = userData?.storeId;
 

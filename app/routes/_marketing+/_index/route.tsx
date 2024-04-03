@@ -17,7 +17,7 @@ import { Pricing } from "./components/Pricing";
 import { PrimaryFeatures } from "./components/PrimaryFeatures";
 import { SecondaryFeatures } from "./components/SecondaryFeatures";
 import { Testimonials } from "./components/Testimonials";
-import { prisma } from "prisma/index.server";
+import { createServices } from "~/modules/auth/services.server";
 
 export const meta: MetaFunction = () => {
   return [
@@ -56,8 +56,9 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
   );
 }
 
-export async function action({ request }: ActionFunctionArgs) {
+export async function action({ context, request }: ActionFunctionArgs) {
   const formData = await request.formData();
+  const { db: prisma } = createServices(context);
 
   const name = formData.get("name") as string;
   const phoneNumber = formData.get("phoneNumber") as string;

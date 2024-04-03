@@ -9,11 +9,11 @@ import {
 } from "@remix-run/react";
 import { ChevronRight, ShareIcon } from "lucide-react";
 import { useSnapshot } from "valtio";
-import { prisma } from "prisma/index.server";
 import { InfoComponent } from "../components/Info";
 import { Layout1 } from "../components/Layout1";
 import { Layout2 } from "../components/Layout2";
 import { cartStore } from "../hooks/cartStore";
+import { createServices } from "~/modules/auth/services.server";
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
   return [
@@ -29,8 +29,9 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
   ];
 };
 
-export async function loader({ params }: LoaderFunctionArgs) {
+export async function loader({ context, params }: LoaderFunctionArgs) {
   const slug = params.slug;
+  const { db: prisma } = createServices(context);
 
   const storeData = await prisma.store.findUnique({
     where: { slug },
