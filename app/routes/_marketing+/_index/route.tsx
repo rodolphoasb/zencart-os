@@ -34,11 +34,11 @@ export const meta: MetaFunction = () => {
   ];
 };
 
-export async function loader({ request }: LoaderFunctionArgs) {
+export async function loader({ context, request }: LoaderFunctionArgs) {
   const { tenant, tld, domain } = getTenant(request);
 
   const isTestingTenantLocally =
-    process.env.NODE_ENV === "development" &&
+    context.cloudflare.env.ENVIRONMENT === "development" &&
     Boolean(tenant) &&
     domain === "localhost";
 
@@ -49,7 +49,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   }
 
   return redirect(
-    process.env.NODE_ENV === "development"
+    context.cloudflare.env.ENVIRONMENT === "development"
       ? `http://localhost:3000/s/${tenant}`
       : `https://zencart.io/s/${tenant}`,
     302

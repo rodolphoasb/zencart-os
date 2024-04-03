@@ -35,7 +35,7 @@ export function createServices(context: AppLoadContext) {
 }
 
 export function createAuth({
-  env: { SESSION_SECRET, ENVIRONMENT, TOTP_SECRET, KV },
+  env: { SESSION_SECRET, ENVIRONMENT, TOTP_SECRET, KV, LOOPS_API_KEY },
 }: ServicesContext) {
   globalThis.Buffer = Buffer;
   const sessionStorage = createWorkersKVSessionStorage<
@@ -63,13 +63,13 @@ export function createAuth({
         secret: TOTP_SECRET,
         magicLinkPath: "/magic-link",
         sendTOTP: async ({ email, code, magicLink }) => {
-          if (process.env.NODE_ENV === "development") {
+          if (ENVIRONMENT === "development") {
             console.log("[Dev-Only] TOTP Code:", code);
           }
           const options = {
             method: "POST",
             headers: {
-              Authorization: `Bearer ${process.env.LOOPS_API_KEY}`,
+              Authorization: `Bearer ${LOOPS_API_KEY}`,
               "Content-Type": "application/json",
             },
             body: JSON.stringify({
