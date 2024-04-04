@@ -12,7 +12,7 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
   } = createServices(context);
 
   const session = await getSession(request.headers.get("cookie"));
-  const authEmail = session.get("auth:email");
+  const authEmail = session.data.user?.email;
   if (!authEmail) return redirect("/login");
   const authError = session.get("auth:error");
 

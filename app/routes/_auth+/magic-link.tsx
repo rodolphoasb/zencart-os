@@ -6,7 +6,7 @@ export async function loader({ request, context }: LoaderFunctionArgs) {
     auth: { authenticator },
   } = createServices(context);
   await authenticator.authenticate("TOTP", request, {
-    successRedirect: "/account",
+    successRedirect: "/home",
     failureRedirect: "/login",
   });
 }

@@ -12,7 +12,7 @@ import { PrismaClient } from "@prisma/client";
 import ws from "ws";
 
 type User = {
-  id: string;
+  userId: string;
   email: string;
 };
 
@@ -54,7 +54,11 @@ export function createAuth({
   globalThis.Buffer = Buffer;
   const sessionStorage = createWorkersKVSessionStorage<
     {
-      "auth:email": string;
+      user: {
+        userId: string;
+        email: string;
+      };
+      storeId?: string;
     },
     { "auth:error": { message: string } }
   >({
@@ -123,7 +127,10 @@ export function createAuth({
           if (!user) throw new Error("Whoops! Unable to create user.");
         }
 
-        return user;
+        return {
+          userId: user.id,
+          email: user.email,
+        };
       }
     )
   );
@@ -144,7 +151,7 @@ export async function getUserData(context: AppLoadContext, request: Request) {
     failureRedirect: "/login",
   });
 
-  const user = await db.user.findUnique({ where: { id: session.id } });
+  const user = await db.user.findUnique({ where: { id: session.userId } });
 
   if (!user) {
     throw new Error("User not found");
@@ -170,11 +177,10 @@ async function getStoreId(
     auth: { getSession },
     db,
   } = createServices(context);
-  const authSession = await getSession(request.headers.get("cookie"));
+  const sessionData = (await getSession(request.headers.get("cookie"))).data;
 
-  // TODO - Fix this
   // Check if there's a storeId session token
-  const maybeStoreId = authSession.get("auth:email") as string;
+  const maybeStoreId = sessionData.storeId;
 
   // If there is, return it
   if (maybeStoreId) return maybeStoreId;
