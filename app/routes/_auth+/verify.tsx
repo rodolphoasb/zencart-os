@@ -55,33 +55,6 @@ export default function Verify() {
           </div>
 
           <div className="flex w-full flex-col items-center justify-center gap-2">
-            <Form
-              method="POST"
-              autoComplete="off"
-              className="flex w-full flex-col gap-2"
-            >
-              <div className="flex flex-col">
-                <label htmlFor="code" className="sr-only">
-                  Code
-                </label>
-                <input
-                  type="text"
-                  name="code"
-                  placeholder="Enter code..."
-                  className="h-11 rounded-md border-2 border-gray-200 bg-transparent px-4 text-base font-semibold placeholder:font-normal placeholder:text-gray-400"
-                  required
-                />
-              </div>
-              <button
-                type="submit"
-                className="clickable flex h-10 items-center justify-center rounded-md bg-gray-800"
-              >
-                <span className="text-sm font-semibold text-white">
-                  Continue
-                </span>
-              </button>
-            </Form>
-
             {/* Request New Code. */}
             {/* Email is already in session, so no input it's required. */}
             <Form

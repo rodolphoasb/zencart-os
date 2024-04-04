@@ -38,8 +38,8 @@ export function Footer() {
             </Link>
           </div> */}
           <p className="mt-6 text-sm text-slate-500 sm:mt-0">
-            Copyright &copy; {new Date().getFullYear()} Zencart. Todos direitos
-            reservados.
+            Copyright &copy; {new Date().getFullYear()} Zencart. All rights
+            reserved.
           </p>
         </div>
       </Container>

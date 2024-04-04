@@ -122,13 +122,9 @@ export function Pricing() {
     >
       <Container>
         <div className="md:text-center">
-          <h2 className="  text-3xl font-semibold tracking-tight text-gray-900 sm:text-4xl">
-            O preço mais simples do mercado.
+          <h2 className="font-semibold text-3xl tracking-tight text-slate-900 sm:text-4xl md:text-5xl">
+            The simplest pricing on the market.
           </h2>
-          <p className="mt-4 text-lg text-gray-800">
-            Você paga uma vez e é seu pra sempre. Simples assim. <br /> Não
-            gostou? Devolvemos todo seu dinheiro nos 7 primeiros dias.
-          </p>
         </div>
         <div className="mt-16 flex w-full justify-center">
           <Plan

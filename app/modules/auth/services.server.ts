@@ -87,7 +87,7 @@ export function createAuth({
               "Content-Type": "application/json",
             },
             body: JSON.stringify({
-              transactionalId: "cltz24zqv008lmpzclmp3d8v2",
+              transactionalId: "cluls4u3201h3fco57tnz79bb",
               email: email,
               dataVariables: {
                 magicLink: magicLink,

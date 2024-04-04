@@ -16,7 +16,6 @@ import { Hero } from "./components/Hero";
 import { Pricing } from "./components/Pricing";
 import { PrimaryFeatures } from "./components/PrimaryFeatures";
 import { SecondaryFeatures } from "./components/SecondaryFeatures";
-import { Testimonials } from "./components/Testimonials";
 import { createServices } from "~/modules/auth/services.server";
 
 export const meta: MetaFunction = () => {
@@ -92,7 +91,7 @@ export default function Index() {
           <PrimaryFeatures />
           <SecondaryFeatures />
           {/* <CallToAction /> */}
-          <Testimonials />
+          {/* <Testimonials /> */}
           <Pricing />
           <Faqs />
         </main>
