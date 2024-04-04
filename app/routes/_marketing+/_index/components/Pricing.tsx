@@ -130,7 +130,7 @@ export function Pricing() {
           <Plan
             featured
             name="Lifetime Plan"
-            price="R$ 59,90"
+            price="$12"
             description="No fees, commissions, or monthly charges."
             href="https://pay.kiwify.com.br/ybcO2sO"
             features={[
