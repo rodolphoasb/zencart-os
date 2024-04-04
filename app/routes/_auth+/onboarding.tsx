@@ -1,5 +1,5 @@
 import { createId } from "@paralleldrive/cuid2";
-import { type ActionFunctionArgs, redirect } from "@remix-run/node";
+import { type ActionFunctionArgs, redirect } from "@remix-run/cloudflare";
 import type { MetaFunction } from "@remix-run/react";
 import { useFetcher, useSearchParams } from "@remix-run/react";
 import { namedAction } from "remix-utils/named-action";
