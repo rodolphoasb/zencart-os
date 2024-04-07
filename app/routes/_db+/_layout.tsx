@@ -38,12 +38,12 @@ import { createServices, getUserData } from "~/modules/auth/services.server";
 const navigation = [
   { name: "Home", href: "/home", icon: HomeIcon },
   {
-    name: "Empresa",
+    name: "Store",
     href: "/stores",
     icon: StoreIcon,
   },
   {
-    name: "Produtos",
+    name: "Products",
     href: "/products",
     icon: ShoppingBag,
   },

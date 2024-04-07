@@ -14,14 +14,14 @@ import { createServices, getUserData } from "~/modules/auth/services.server";
 
 export const meta: MetaFunction = () => {
   return [
-    { title: "Gerencie seus Produtos | Zencart" },
+    { title: "Manage Your Products | Zencart" },
     {
       property: "og:title",
-      content: "Gerencie seus Produtos | Zencart",
+      content: "Manage Your Products | Zencart",
     },
     {
       name: "description",
-      content: "Adicione, edite e exclua produtos da sua loja.",
+      content: "Add, edit, and delete products from your store.",
     },
   ];
 };
@@ -93,13 +93,13 @@ export default function Screen() {
     <div className="flex flex-col">
       <div className="mb-12 flex flex-col sm:flex-row sm:items-center sm:justify-between">
         <h1 className="flex items-start text-lg font-semibold text-gray-600">
-          Seus produtos
+          Your products
         </h1>
         <div className="mt-4 flex flex-col gap-x-4 gap-y-2 sm:mt-0 sm:flex-row sm:gap-y-0">
           <Button2 href={`/products/categories`} color="white">
-            Ajustar Categorias
+            Adjust Categories
           </Button2>
-          <Button2 href={`/products/new`}>Criar produto</Button2>
+          <Button2 href={`/products/new`}>Create product</Button2>
         </div>
       </div>
 

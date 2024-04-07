@@ -443,7 +443,7 @@ export default function Screen() {
               status={isPending || imageIsUploading ? "pending" : "idle"}
               type="submit"
             >
-              Salvar mudanças
+              Save changes
             </Button2>
           </div>
         </div>
@@ -629,7 +629,7 @@ export default function Screen() {
 
       <div className="mt-8">
         <div className="flex items-center justify-between">
-          <h2 className="font-medium text-gray-700">Unidades</h2>
+          <h2 className="font-medium text-gray-700">Units</h2>
 
           <ClientOnly>{() => <DrawerDialogCreateUnit />}</ClientOnly>
         </div>
