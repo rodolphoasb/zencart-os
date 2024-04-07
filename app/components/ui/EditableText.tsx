@@ -7,6 +7,7 @@ type EditableTextProps = {
   fieldName: string;
   value: string;
   buttonLabel?: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   rowType: any;
   // rowType: AttributeType;
   rowIndex: number;
@@ -37,9 +38,9 @@ export function EditableText({
   columnId,
 }: EditableTextProps) {
   const fetcher = useFetcher({ key: `update-attribute-value` });
-  let [edit, setEdit] = useState(false);
-  let inputRef = useRef<HTMLInputElement>(null);
-  let buttonRef = useRef<HTMLButtonElement>(null);
+  const [edit, setEdit] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
 
   if (
     fetcher.formData?.has("value") &&
@@ -97,7 +98,7 @@ export function EditableText({
             buttonRef.current?.focus();
           }
         }}
-        onBlur={(event) => {
+        onBlur={() => {
           if (inputRef.current?.value !== value) {
             const data = {
               fieldName: fieldName,

@@ -204,21 +204,21 @@ export const Button2 = React.forwardRef(function Button(
     children,
     ...props
   }: ButtonProps,
-  ref: React.ForwardedRef<HTMLElement>,
+  ref: React.ForwardedRef<HTMLElement>
 ) {
   const delayedPending = useSpinDelay(status === "pending", {
     delay: 400,
     minDuration: 300,
     ...spinDelay,
   });
-  let classes = clsx(
+  const classes = clsx(
     outline
       ? styles.outline
       : plain
       ? styles.plain
       : clsx(styles.solid, styles.colors[color ?? "dark/zinc"]),
     className,
-    styles.base,
+    styles.base
   );
 
   const companion = {
