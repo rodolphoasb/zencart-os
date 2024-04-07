@@ -29,38 +29,38 @@ import { LogoUpload } from "../components/LogoUpload";
 import { createServices, getUserData } from "~/modules/auth/services.server";
 
 const PAYMENT_OPTIONS: Option[] = [
-  { label: "Dinheiro", value: "cash" },
-  { label: "Cartão de Crédito", value: "credit" },
-  { label: "Cartão de Débito", value: "debit" },
+  { label: "Cash", value: "cash" },
+  { label: "Credit Card", value: "credit" },
+  { label: "Debit Card", value: "debit" },
   { label: "Pix", value: "pix" },
   { label: "Boleto", value: "boleto" },
-  { label: "Transferência Bancária", value: "transfer" },
-  { label: "Cheque", value: "check" },
+  { label: "Bank Transfer", value: "transfer" },
+  { label: "Check", value: "check" },
 ];
 
 export const meta: MetaFunction = () => {
   return [
-    { title: "Gerencie sua empresa | Zencart" },
+    { title: "Manage Your Business | Zencart" },
     {
       property: "og:title",
-      content: "Gerencie sua empresa | Zencart",
+      content: "Manage Your Business | Zencart",
     },
     {
       name: "description",
-      content: "Edite os dados da sua empresa e suas unidades.",
+      content: "Edit your business information and its units.",
     },
   ];
 };
 
 const updateStoreSchema = z.object({
   storeName: z.string({
-    required_error: "O nome da loja é obrigatório.",
+    required_error: "The store name is required.",
   }),
   slug: z.string({
-    required_error: "O slug da loja é obrigatório.",
+    required_error: "The store slug is required.",
   }),
   category: z.string({
-    required_error: "A categoria da loja é obrigatória.",
+    required_error: "The store category is required.",
   }),
   description: z.string().optional(),
   paymentOptions: z.array(z.string()),
