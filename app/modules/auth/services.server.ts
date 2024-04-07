@@ -23,7 +23,6 @@ export interface ServicesContext {
 }
 
 export function createServices(context: AppLoadContext) {
-  console.log("createServices");
   // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/get#smart_self-overwriting_lazy_getters
   const servicesContext: ServicesContext = {
     env: context.cloudflare.env,
@@ -57,6 +56,7 @@ export function createAuth({
   globalThis.Buffer = Buffer;
   const sessionStorage = createWorkersKVSessionStorage<
     {
+      "auth:email": string;
       user: {
         userId: string;
         email: string;
@@ -103,13 +103,7 @@ export function createAuth({
           };
 
           try {
-            const response = await fetch(
-              "https://app.loops.so/api/v1/transactional",
-              options
-            );
-            const jsonResponse = await response.json();
-
-            console.log("jsonResponse", jsonResponse);
+            await fetch("https://app.loops.so/api/v1/transactional", options);
           } catch (err) {
             console.log(err);
             KV.put(

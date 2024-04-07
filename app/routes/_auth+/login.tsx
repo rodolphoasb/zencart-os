@@ -38,13 +38,7 @@ export async function action({ context, request }: ActionFunctionArgs) {
     auth: { authenticator },
   } = createServices(context);
   await authenticator.authenticate("TOTP", request, {
-    // The `successRedirect` route it's required.
-    // User is not authenticated yet.
-    // We want to redirect to our verify code form. (/verify-code or any other route).
     successRedirect: "/verify",
-
-    // The `failureRedirect` route it's required.
-    // We want to display any possible error message.
     failureRedirect: "/login",
   });
 }

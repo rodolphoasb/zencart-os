@@ -8,11 +8,15 @@ import { createServices } from "~/modules/auth/services.server";
 
 export async function loader({ context, request }: LoaderFunctionArgs) {
   const {
-    auth: { getSession, commitSession },
+    auth: { getSession, commitSession, authenticator },
   } = createServices(context);
+  await authenticator.isAuthenticated(request, {
+    successRedirect: "/home",
+  });
 
   const session = await getSession(request.headers.get("cookie"));
-  const authEmail = session.data.user?.email;
+
+  const authEmail = session.get("auth:email");
   if (!authEmail) return redirect("/login");
   const authError = session.get("auth:error");
 
