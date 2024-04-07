@@ -20,28 +20,28 @@ import { createServices, getUserData } from "~/modules/auth/services.server";
 
 export const meta: MetaFunction = () => {
   return [
-    { title: "Gerencie suas categorias | Zencart" },
+    { title: "Manage your categories | Zencart" },
     {
       property: "og:title",
-      content: "Gerencie suas categorias | Zencart",
+      content: "Manage your categories | Zencart",
     },
     {
       name: "description",
-      content: "Adicione, edite e exclua categorias da sua loja.",
+      content: "Add, edit, and delete categories from your store.",
     },
   ];
 };
 
 const newCategorySchema = z.object({
   name: z.string({
-    required_error: "O nome do produto é obrigatório.",
+    required_error: "The product name is required.",
   }),
   categoryTags: z.string(),
 });
 
 const updateCategorySchema = z.object({
   name: z.string({
-    required_error: "O nome do produto é obrigatório.",
+    required_error: "The product name is required.",
   }),
   categoryTags: z.string(),
   categoryId: z.string(),
@@ -95,7 +95,7 @@ export async function action({ context, request }: ActionFunctionArgs) {
         {
           ok: true,
         },
-        "Categoria criada com sucesso"
+        "Category created successfully"
       );
     },
 
@@ -105,12 +105,10 @@ export async function action({ context, request }: ActionFunctionArgs) {
         schema: updateCategorySchema,
       });
 
-      console.log("HERE", submission);
-
       // Send the submission back to the client if the status is not successful
       if (submission.status !== "success") {
         const reply = submission.reply();
-        return handleErrorReturn(reply, "Erro ao atualizar o produto.");
+        return handleErrorReturn(reply, "Error updating the category.");
       }
 
       console.log(submission.value);
@@ -141,7 +139,7 @@ export async function action({ context, request }: ActionFunctionArgs) {
         {
           ok: true,
         },
-        "Categoria atualizada com sucesso"
+        "Category updated successfully"
       );
     },
     async deleteCategory() {
@@ -153,7 +151,7 @@ export async function action({ context, request }: ActionFunctionArgs) {
       // Send the submission back to the client if the status is not successful
       if (submission.status !== "success") {
         const reply = submission.reply();
-        return handleErrorReturn(reply, "Erro ao deletar o produto.");
+        return handleErrorReturn(reply, "Error deleting the category.");
       }
 
       const { categoryId } = submission.value;
@@ -168,7 +166,7 @@ export async function action({ context, request }: ActionFunctionArgs) {
         {
           ok: true,
         },
-        "Categoria excluída com sucesso"
+        "Category deleted successfully"
       );
     },
   });
@@ -214,13 +212,13 @@ export default function ManageCategoriesPage() {
     <div className="flex flex-col">
       <div className="mb-12 flex items-center justify-between">
         <h1 className="flex items-center text-lg font-semibold text-gray-600">
-          Gerencie suas categorias
+          Manage your categories
         </h1>
         <div className="flex gap-x-4">
           <ClientOnly>
             {() => (
               <DrawerDialogCreateCategory tags={data.tags}>
-                <Button2>Criar Categoria</Button2>
+                <Button2>Create Category</Button2>
               </DrawerDialogCreateCategory>
             )}
           </ClientOnly>
@@ -232,8 +230,8 @@ export default function ManageCategoriesPage() {
       ) : (
         <div className="flex min-h-[200px] flex-col items-center justify-center gap-y-3 rounded-md border-2 border-dashed bg-white p-4">
           <p className="text-center text-sm text-gray-600">
-            Você ainda não criou nenhuma categoria. <br /> Clique no botão acima
-            para criar sua primeira categoria.
+            You haven&#39;t created any categories yet. <br /> Click the button
+            above to create your first category.
           </p>
         </div>
       )}

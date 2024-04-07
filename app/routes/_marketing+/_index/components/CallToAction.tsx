@@ -1,6 +1,6 @@
-import posthog from 'posthog-js'
-import { Button2 } from '~/components/ui/button2'
-import { Container } from './Container'
+import posthog from "posthog-js";
+import { Button2 } from "~/components/ui/button2";
+import { Container } from "./Container";
 
 export function CallToAction() {
   return (
@@ -29,7 +29,7 @@ export function CallToAction() {
             color="dark"
             className="mt-10 h-16 w-52 md:text-base"
             onClick={() => {
-              posthog.capture('clicked_buy_now')
+              posthog.capture("clicked_buy_now");
             }}
           >
             Criar minha loja
@@ -37,5 +37,5 @@ export function CallToAction() {
         </div>
       </Container>
     </section>
-  )
+  );
 }

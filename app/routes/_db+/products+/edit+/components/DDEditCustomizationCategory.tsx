@@ -1,10 +1,10 @@
-'use client'
+"use client";
 
-import * as React from 'react'
-import { useFetcher } from '@remix-run/react'
-import { useMediaQuery } from '@uidotdev/usehooks'
-import { Edit } from 'lucide-react'
-import { Button2 } from '~/components/ui/button2'
+import * as React from "react";
+import { useFetcher } from "@remix-run/react";
+import { useMediaQuery } from "@uidotdev/usehooks";
+import { Edit } from "lucide-react";
+import { Button2 } from "~/components/ui/button2";
 import {
   Dialog,
   DialogContent,
@@ -12,7 +12,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '~/components/ui/dialog'
+} from "~/components/ui/dialog";
 import {
   Drawer,
   DrawerContent,
@@ -20,11 +20,11 @@ import {
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
-} from '~/components/ui/drawer'
-import { Input } from '~/components/ui/input'
-import { Label } from '~/components/ui/label'
-import { cn } from '~/utils'
-import type { loader } from '../$productId'
+} from "~/components/ui/drawer";
+import { Input } from "~/components/ui/input";
+import { Label } from "~/components/ui/label";
+import { cn } from "~/utils";
+import type { loader } from "../$productId";
 
 export function DDEditCustomizationCategory({
   customizationCategoryId,
@@ -32,24 +32,24 @@ export function DDEditCustomizationCategory({
   customizationMin,
   customizationMax,
 }: {
-  customizationCategoryId: number
-  customizationName: string
-  customizationMin: number
-  customizationMax: number
+  customizationCategoryId: number;
+  customizationName: string;
+  customizationMin: number;
+  customizationMax: number;
 }) {
-  const [open, setOpen] = React.useState(false)
-  const isDesktop = useMediaQuery('only screen and (min-width : 768px)')
+  const [open, setOpen] = React.useState(false);
+  const isDesktop = useMediaQuery("only screen and (min-width : 768px)");
   const fetcher = useFetcher<typeof loader>({
-    key: 'editCustomizationCategory',
-  })
+    key: "editCustomizationCategory",
+  });
   const isPending =
-    fetcher.state === 'submitting' || fetcher.state === 'loading'
+    fetcher.state === "submitting" || fetcher.state === "loading";
 
   React.useEffect(() => {
     if (isPending === false && fetcher.data?.ok) {
-      setOpen(false)
+      setOpen(false);
     }
-  }, [fetcher.data, isPending])
+  }, [fetcher.data, isPending]);
 
   if (isDesktop) {
     return (
@@ -61,9 +61,10 @@ export function DDEditCustomizationCategory({
         </DialogTrigger>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
-            <DialogTitle>Criar customização</DialogTitle>
+            <DialogTitle>Create customization</DialogTitle>
             <DialogDescription>
-              Esse é o espaço para você fazer alterações no layout da sua loja.
+              This is the space for you to make changes to your store&#39;s
+              layout.
             </DialogDescription>
           </DialogHeader>
           <StylesForm
@@ -74,7 +75,7 @@ export function DDEditCustomizationCategory({
           />
         </DialogContent>
       </Dialog>
-    )
+    );
   }
 
   return (
@@ -86,9 +87,10 @@ export function DDEditCustomizationCategory({
       </DrawerTrigger>
       <DrawerContent>
         <DrawerHeader className="text-left">
-          <DrawerTitle>Criar customização</DrawerTitle>
+          <DrawerTitle>Create customization</DrawerTitle>
           <DrawerDescription>
-            Esse é o espaço para você fazer alterações no layout da sua loja.
+            This is the space for you to make changes to your store&#39;s
+            layout.
           </DrawerDescription>
         </DrawerHeader>
         <StylesForm
@@ -100,7 +102,7 @@ export function DDEditCustomizationCategory({
         />
       </DrawerContent>
     </Drawer>
-  )
+  );
 }
 
 function StylesForm({
@@ -110,42 +112,42 @@ function StylesForm({
   customizationMin,
   customizationMax,
 }: {
-  className?: string
-  customizationCategoryId: number
-  customizationName: string
-  customizationMin: number
-  customizationMax: number
+  className?: string;
+  customizationCategoryId: number;
+  customizationName: string;
+  customizationMin: number;
+  customizationMax: number;
 }) {
-  const fetcher = useFetcher({ key: 'editCustomizationCategory' })
+  const fetcher = useFetcher({ key: "editCustomizationCategory" });
   const isPending =
-    fetcher.state === 'submitting' || fetcher.state === 'loading'
+    fetcher.state === "submitting" || fetcher.state === "loading";
 
   return (
     <fetcher.Form
       method="post"
       action="?/editCustomizationCategory"
-      className={cn('grid items-start gap-2', className)}
+      className={cn("grid items-start gap-2", className)}
     >
       <div className="flex flex-col gap-y-2">
         <Label htmlFor="customizationName" className="text-left">
-          Nome
+          Name
         </Label>
         <Input
           id="customizationName"
           name="customizationName"
-          placeholder="Ex: Tamanho"
+          placeholder="E.g.: Size"
           className="col-span-3 text-base sm:text-sm"
           defaultValue={customizationName}
         />
       </div>
       <div className="flex flex-col gap-y-2">
         <Label htmlFor="customizationMin" className="text-left">
-          Mínimo
+          Minimum
         </Label>
         <Input
           id="customizationMin"
           name="customizationMin"
-          placeholder="Ex: 1"
+          placeholder="E.g.: 1"
           className="col-span-3 text-base sm:text-sm"
           type="number"
           defaultValue={customizationMin}
@@ -153,12 +155,12 @@ function StylesForm({
       </div>
       <div className="flex flex-col gap-y-2">
         <Label htmlFor="customizationMax" className="text-left">
-          Máximo
+          Maximum
         </Label>
         <Input
           id="customizationMax"
           name="customizationMax"
-          placeholder="Ex: 10"
+          placeholder="E.g.: 10"
           className="col-span-3 text-base sm:text-sm"
           type="number"
           defaultValue={customizationMax}
@@ -169,9 +171,9 @@ function StylesForm({
         name="customizationCategoryId"
         value={customizationCategoryId}
       />
-      <Button2 status={isPending ? 'pending' : 'idle'} type="submit">
-        Salvar
+      <Button2 status={isPending ? "pending" : "idle"} type="submit">
+        Save
       </Button2>
     </fetcher.Form>
-  )
+  );
 }

@@ -637,7 +637,7 @@ export default function Screen() {
         {loaderData.data.units.length === 0 ? (
           <div className="mt-8 flex h-20 w-full flex-col items-center justify-center rounded-lg border border-dashed border-gray-400 p-4">
             <p className="text-sm text-gray-500">
-              Você ainda não possui nenhuma unidade.
+              You do not have any units yet.
             </p>
           </div>
         ) : (

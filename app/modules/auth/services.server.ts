@@ -28,13 +28,16 @@ export function createServices(context: AppLoadContext) {
   const servicesContext: ServicesContext = {
     env: context.cloudflare.env,
     get db() {
+      // @ts-expect-error The operand of a 'delete' operator must be optional. ts(2790)
+      delete this.db;
+
       neonConfig.webSocketConstructor = ws;
       const connectionString = `${context.cloudflare.env.DATABASE_URL}`;
       const pool = new Pool({ connectionString });
       const adapter = new PrismaNeon(pool);
-      const prisma = new PrismaClient({ adapter });
+      this.db = new PrismaClient({ adapter });
 
-      return prisma;
+      return this.db;
     },
     get auth() {
       console.log("get auth() self-overwriting");
@@ -151,7 +154,11 @@ export async function getUserData(context: AppLoadContext, request: Request) {
     failureRedirect: "/login",
   });
 
+  console.log("session", session);
+
   const user = await db.user.findUnique({ where: { id: session.userId } });
+
+  console.log("user", user);
 
   if (!user) {
     throw new Error("User not found");

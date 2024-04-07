@@ -108,14 +108,14 @@ export default function Screen() {
       ) : (
         <div className="flex min-h-[200px] flex-col items-center justify-center gap-y-3 rounded-md border-2 border-dashed bg-white p-4">
           <p className="text-center text-sm text-gray-600">
-            Você ainda não criou nenhum produto. <br />{" "}
+            You haven&#39;t created any products yet. <br />{" "}
             <Link
               className={`border-dashed border-gray-700 font-semibold hover:border-b hover:text-gray-700`}
               to="/products/new"
             >
-              Clique aqui
+              Click here
             </Link>{" "}
-            para criar seu primeiro produto.
+            to create your first product.
           </p>
         </div>
       )}

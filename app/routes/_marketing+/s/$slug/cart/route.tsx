@@ -1,11 +1,11 @@
-import { useEffect, useState } from 'react'
-import { useNavigate, useParams, useRouteLoaderData } from '@remix-run/react'
-import { format, getDay, parse } from 'date-fns'
-import { ArrowLeft, HandCoins } from 'lucide-react'
-import { toast } from 'sonner'
-import { Input } from '~/components/ui/input'
-import { Label } from '~/components/ui/label'
-import { RadioGroup, RadioGroupItem } from '~/components/ui/radio-group'
+import { useEffect, useState } from "react";
+import { useNavigate, useParams, useRouteLoaderData } from "@remix-run/react";
+import { format, getDay, parse } from "date-fns";
+import { ArrowLeft, HandCoins } from "lucide-react";
+import { toast } from "sonner";
+import { Input } from "~/components/ui/input";
+import { Label } from "~/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "~/components/ui/radio-group";
 import {
   Select,
   SelectContent,
@@ -13,62 +13,62 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '~/components/ui/select'
-import { Textarea } from '~/components/ui/textarea'
-import { cartStore } from '../../hooks/cartStore'
-import { type loader } from '../route'
-import { Sheet, SheetContent } from './components/CartSheet'
+} from "~/components/ui/select";
+import { Textarea } from "~/components/ui/textarea";
+import { cartStore } from "../../hooks/cartStore";
+import { type loader } from "../route";
+import { Sheet, SheetContent } from "./components/CartSheet";
 
 export default function CartPage() {
-  const [isOpen, setIsOpen] = useState(true)
+  const [isOpen, setIsOpen] = useState(true);
   const data = useRouteLoaderData<typeof loader>(
-    'routes/_marketing+/s/$slug/route',
-  )
-  const units = data?.data?.units
-  const numberOfUnits = units?.length
+    "routes/_marketing+/s/$slug/route"
+  );
+  const units = data?.data?.units;
+  const numberOfUnits = units?.length;
   const acceptsOrdersOutsideBusinessHours =
-    data?.data?.acceptsOrdersOutsideBusinessHours
-  const hasUnitWithPhoneNumber = units?.some(unit => unit.phone)
-  const [selectedUnit, setSelectedUnit] = useState(units?.[0]?.id.toString())
-  const [customerName, setCustomerName] = useState('')
-  const [customerAddress, setCustomerAddress] = useState('')
+    data?.data?.acceptsOrdersOutsideBusinessHours;
+  const hasUnitWithPhoneNumber = units?.some((unit) => unit.phone);
+  const [selectedUnit, setSelectedUnit] = useState(units?.[0]?.id.toString());
+  const [customerName, setCustomerName] = useState("");
+  const [customerAddress, setCustomerAddress] = useState("");
 
   const selectedUnitTypeOfDelivery = units?.find(
-    unit => unit.id.toString() === selectedUnit,
-  )?.typeOfDelivery
+    (unit) => unit.id.toString() === selectedUnit
+  )?.typeOfDelivery;
   const selectedUnitBusinessHours = units?.find(
-    unit => unit.id.toString() === selectedUnit,
-  )?.businessHours
-  const isSelectedStoreOpen = selectedUnitIsOpen(selectedUnitBusinessHours)
+    (unit) => unit.id.toString() === selectedUnit
+  )?.businessHours;
+  const isSelectedStoreOpen = selectedUnitIsOpen(selectedUnitBusinessHours);
   const selectedUnitPhoneNumber = units?.find(
-    unit => unit.id.toString() === selectedUnit,
-  )?.phone
+    (unit) => unit.id.toString() === selectedUnit
+  )?.phone;
 
   const [editMode, setEditMode] = useState<null | {
-    itemId?: string
-    productCartId: string
-    initialQuantity: number
-    quantity: number
-  }>(null)
-  const [deliveryType, setDeliveryType] = useState<'delivery' | 'pickup'>(
-    selectedUnitTypeOfDelivery === 'deliveryAndPickup'
-      ? 'delivery'
-      : selectedUnitTypeOfDelivery === 'onlyDelivery'
-        ? 'delivery'
-        : 'pickup',
-  )
+    itemId?: string;
+    productCartId: string;
+    initialQuantity: number;
+    quantity: number;
+  }>(null);
+  const [deliveryType, setDeliveryType] = useState<"delivery" | "pickup">(
+    selectedUnitTypeOfDelivery === "deliveryAndPickup"
+      ? "delivery"
+      : selectedUnitTypeOfDelivery === "onlyDelivery"
+      ? "delivery"
+      : "pickup"
+  );
 
   const order: OrderDetails = {
     customerName: customerName,
-    items: cartStore.cart.map(cartItem => {
+    items: cartStore.cart.map((cartItem) => {
       const productDetails = data?.data?.categories
-        .flatMap(category => category.products)
-        .find(product => product.id === cartItem.id) // Assuming cartItem.id corresponds to product.id
+        .flatMap((category) => category.products)
+        .find((product) => product.id === cartItem.id); // Assuming cartItem.id corresponds to product.id
 
       if (!productDetails) {
         throw new Error(
-          `Product details not found for cart item with ID: ${cartItem.id}`,
-        )
+          `Product details not found for cart item with ID: ${cartItem.id}`
+        );
       }
 
       return {
@@ -78,18 +78,18 @@ export default function CartPage() {
           ((cartItem.price +
             cartItem.customizationItems.reduce(
               (acc, item) => acc + item.price * item.quantity,
-              0,
+              0
             )) *
             cartItem.quantity) /
           100
-        ).toLocaleString('pt-BR', {
-          style: 'currency',
-          currency: 'BRL',
+        ).toLocaleString("pt-BR", {
+          style: "currency",
+          currency: "BRL",
         }),
-      }
+      };
     }),
     total:
-      deliveryType === 'delivery'
+      deliveryType === "delivery"
         ? `Entrega (mais) ` +
           (
             cartStore.cart.reduce((acc, item) => {
@@ -98,14 +98,14 @@ export default function CartPage() {
                 (item.price +
                   item.customizationItems.reduce(
                     (acc, item) => acc + item.price * item.quantity,
-                    0,
+                    0
                   )) *
                   item.quantity
-              )
+              );
             }, 0) / 100
-          ).toLocaleString('pt-BR', {
-            style: 'currency',
-            currency: 'BRL',
+          ).toLocaleString("pt-BR", {
+            style: "currency",
+            currency: "BRL",
           })
         : (
             cartStore.cart.reduce((acc, item) => {
@@ -114,61 +114,61 @@ export default function CartPage() {
                 (item.price +
                   item.customizationItems.reduce(
                     (acc, item) => acc + item.price * item.quantity,
-                    0,
+                    0
                   )) *
                   item.quantity
-              )
+              );
             }, 0) / 100
-          ).toLocaleString('pt-BR', {
-            style: 'currency',
-            currency: 'BRL',
+          ).toLocaleString("pt-BR", {
+            style: "currency",
+            currency: "BRL",
           }),
     phoneNumber: `55${selectedUnitPhoneNumber}`,
     typeOfDelivery: deliveryType,
     address: customerAddress,
-  }
+  };
 
   // Generate the link
-  const whatsappLink = generateWhatsAppLink(order)
+  const whatsappLink = generateWhatsAppLink(order);
 
   useEffect(() => {
-    if (selectedUnitTypeOfDelivery === 'onlyDelivery') {
-      setDeliveryType('delivery')
-    } else if (selectedUnitTypeOfDelivery === 'onlyPickup') {
-      setDeliveryType('pickup')
+    if (selectedUnitTypeOfDelivery === "onlyDelivery") {
+      setDeliveryType("delivery");
+    } else if (selectedUnitTypeOfDelivery === "onlyPickup") {
+      setDeliveryType("pickup");
     }
-  }, [selectedUnitTypeOfDelivery])
+  }, [selectedUnitTypeOfDelivery]);
 
   const getSelectedProductsData = () => {
-    return cartStore.cart.map(cartItem => {
+    return cartStore.cart.map((cartItem) => {
       const productDetails = data?.data?.categories
-        .flatMap(category => category.products)
-        .find(product => product.id === cartItem.id) // Assuming cartItem.id corresponds to product.id
+        .flatMap((category) => category.products)
+        .find((product) => product.id === cartItem.id); // Assuming cartItem.id corresponds to product.id
 
       if (!productDetails) {
         throw new Error(
-          `Product details not found for cart item with ID: ${cartItem.id}`,
-        )
+          `Product details not found for cart item with ID: ${cartItem.id}`
+        );
       }
 
       return {
         ...cartItem,
         productDetails,
-      }
-    })
-  }
-  const selectedProductsData = getSelectedProductsData()
+      };
+    });
+  };
+  const selectedProductsData = getSelectedProductsData();
 
-  const navigate = useNavigate()
-  const params = useParams()
+  const navigate = useNavigate();
+  const params = useParams();
 
   useEffect(() => {
     if (isOpen === false) {
       navigate(`/s/${params.slug}`, {
         preventScrollReset: true,
-      })
+      });
     }
-  }, [isOpen, navigate, params.slug])
+  }, [isOpen, navigate, params.slug]);
 
   if (hasUnitWithPhoneNumber === false || !numberOfUnits) {
     return (
@@ -176,21 +176,21 @@ export default function CartPage() {
         Não é possível finalizar a compra sem a empresa cadastrar um número de
         telefone.
       </div>
-    )
+    );
   }
 
   const isDisabled =
     (isSelectedStoreOpen === false &&
       acceptsOrdersOutsideBusinessHours === false) ||
-    cartStore.cart.length === 0
+    cartStore.cart.length === 0;
 
   return (
     <>
       <Sheet open={isOpen} onOpenChange={setIsOpen}>
         <SheetContent
-          onOpenAutoFocus={e => e.preventDefault()}
+          onOpenAutoFocus={(e) => e.preventDefault()}
           className="z-[9999] h-full bg-white p-0"
-          side={'bottom'}
+          side={"bottom"}
         >
           <div className="relative h-full w-full">
             <div className="absolute inset-x-0 top-0 z-20 bg-white py-3">
@@ -198,7 +198,7 @@ export default function CartPage() {
                 <button
                   className="absolute left-2 top-4 z-20"
                   onClick={() => {
-                    setIsOpen(false)
+                    setIsOpen(false);
                   }}
                 >
                   <ArrowLeft className="h-full w-full text-orange-500" />
@@ -246,14 +246,14 @@ export default function CartPage() {
                           <SelectValue aria-label={selectedUnit}>
                             {
                               units?.find(
-                                unit => unit.id.toString() === selectedUnit,
+                                (unit) => unit.id.toString() === selectedUnit
                               )?.name
                             }
                           </SelectValue>
                         </SelectTrigger>
                         <SelectContent className="z-[9999]">
                           <SelectGroup className="max-h-48 overflow-y-scroll">
-                            {units.map(unit => (
+                            {units.map((unit) => (
                               <SelectItem
                                 key={unit.id}
                                 value={unit.id.toString()}
@@ -278,14 +278,14 @@ export default function CartPage() {
                 <RadioGroup
                   className="z-0 mt-2 flex flex-col gap-y-4 px-4 sm:flex-row sm:gap-x-4 sm:gap-y-0"
                   value={deliveryType}
-                  onValueChange={value => {
-                    console.log('value', value)
+                  onValueChange={(value) => {
+                    console.log("value", value);
 
-                    setDeliveryType(value as 'delivery' | 'pickup')
+                    setDeliveryType(value as "delivery" | "pickup");
                   }}
                 >
                   {/* Check type of delivery of the selected store and layout the options */}
-                  {selectedUnitTypeOfDelivery === 'onlyDelivery' ? (
+                  {selectedUnitTypeOfDelivery === "onlyDelivery" ? (
                     <Label
                       htmlFor="delivery"
                       className="relative flex w-fit items-center space-x-6 rounded-md border p-4"
@@ -302,7 +302,7 @@ export default function CartPage() {
                       </div>
                     </Label>
                   ) : null}
-                  {selectedUnitTypeOfDelivery === 'onlyPickup' ? (
+                  {selectedUnitTypeOfDelivery === "onlyPickup" ? (
                     <Label
                       htmlFor="pickup"
                       className="relative flex w-fit items-center space-x-6 rounded-md border p-4"
@@ -319,7 +319,7 @@ export default function CartPage() {
                       </div>
                     </Label>
                   ) : null}
-                  {selectedUnitTypeOfDelivery === 'deliveryAndPickup' ? (
+                  {selectedUnitTypeOfDelivery === "deliveryAndPickup" ? (
                     <div className="flex gap-x-2">
                       <Label
                         htmlFor="delivery"
@@ -357,7 +357,7 @@ export default function CartPage() {
 
                 {/* Detalhes da Entrega - Se entrega estiver disponível */}
 
-                {deliveryType === 'delivery' ? (
+                {deliveryType === "delivery" ? (
                   <div className="mt-4 flex flex-col gap-y-2 px-4">
                     <Label htmlFor="address" className="text-left">
                       Seu endereço (obrigatório)
@@ -368,7 +368,7 @@ export default function CartPage() {
                       placeholder="Digite seu endereço"
                       className="col-span-3 text-base"
                       value={customerAddress}
-                      onChange={e => setCustomerAddress(e.target.value)}
+                      onChange={(e) => setCustomerAddress(e.target.value)}
                     />
                   </div>
                 ) : null}
@@ -383,7 +383,7 @@ export default function CartPage() {
                     placeholder="Digite seu nome"
                     className="col-span-3 text-base"
                     value={customerName}
-                    onChange={e => setCustomerName(e.target.value)}
+                    onChange={(e) => setCustomerName(e.target.value)}
                   />
                 </div>
 
@@ -393,9 +393,9 @@ export default function CartPage() {
                       <span className="text-lg">✅</span>
 
                       <span className="text-sm text-green-700">
-                        Essa unidade está fechada no momento, mas aceita pedidos
-                        fora do horário de funcionamento. Finalize seu pedido e
-                        a loja te retornará assim que reabrir.
+                        This unit is currently closed but accepts orders outside
+                        of business hours. Place your order and the store will
+                        get back to you as soon as it reopens.
                       </span>
                     </div>
                   ) : (
@@ -403,15 +403,15 @@ export default function CartPage() {
                       <span className="text-sm">❌</span>
 
                       <span className="text-xs text-red-700">
-                        Essa unidade está fechada no momento, e não aceita
-                        pedidos fora do horário de funcionamento.
+                        This unit is currently closed and does not accept orders
+                        outside of business hours.
                       </span>
                     </div>
                   )}
                 </div>
 
-                {/* Se a loja estiver fechada mostre o texto */}
-                {/* Loja fechada no momento. Mas você pode finalizar o pedido com a opção de retirada para pegar o produto depois que a loja reabrir. */}
+                {/* If the store is closed, display this text */}
+                {/* Store is currently closed. However, you can complete your order with the option to pick up the product after the store reopens. */}
 
                 {/* Divider */}
                 <div className="mt-4 h-2 w-full bg-gray-100" />
@@ -435,17 +435,17 @@ export default function CartPage() {
                                 </p>
                                 <p>
                                   {item.customizationItems.map(
-                                    customizationItem => {
+                                    (customizationItem) => {
                                       return (
                                         <span
                                           key={customizationItem.id}
                                           className="text-sm text-gray-600"
                                         >
-                                          {customizationItem.quantity}x{' '}
+                                          {customizationItem.quantity}x{" "}
                                           {customizationItem.name}
                                         </span>
-                                      )
-                                    },
+                                      );
+                                    }
                                   )}
                                 </p>
                                 <p className="text-sm font-semibold text-gray-600">
@@ -454,13 +454,13 @@ export default function CartPage() {
                                       item.customizationItems.reduce(
                                         (acc, item) =>
                                           acc + item.price * item.quantity,
-                                        0,
+                                        0
                                       )) *
                                       item.quantity) /
                                     100
-                                  ).toLocaleString('pt-BR', {
-                                    style: 'currency',
-                                    currency: 'BRL',
+                                  ).toLocaleString("pt-BR", {
+                                    style: "currency",
+                                    currency: "BRL",
                                   })}
                                 </p>
                                 {editMode ? null : (
@@ -471,7 +471,7 @@ export default function CartPage() {
                                         productCartId: item.productCartId,
                                         quantity: item.quantity,
                                         initialQuantity: item.quantity,
-                                      })
+                                      });
                                     }}
                                     className="w-fit text-sm font-medium text-orange-500"
                                   >
@@ -494,16 +494,16 @@ export default function CartPage() {
                                   <button
                                     disabled={editMode.quantity === 0}
                                     onClick={() => {
-                                      setEditMode(prev => {
+                                      setEditMode((prev) => {
                                         if (prev) {
                                           return {
                                             ...prev,
                                             quantity: prev.quantity - 1,
-                                          }
+                                          };
                                         }
 
-                                        return prev
-                                      })
+                                        return prev;
+                                      });
                                     }}
                                     className="px-4 py-2 text-orange-600 focus:outline-none disabled:text-gray-300"
                                   >
@@ -514,16 +514,16 @@ export default function CartPage() {
                                   </div>
                                   <button
                                     onClick={() => {
-                                      setEditMode(prev => {
+                                      setEditMode((prev) => {
                                         if (prev) {
                                           return {
                                             ...prev,
                                             quantity: prev.quantity + 1,
-                                          }
+                                          };
                                         }
 
-                                        return prev
-                                      })
+                                        return prev;
+                                      });
                                     }}
                                     className="px-4 py-2 text-orange-600 focus:outline-none"
                                   >
@@ -534,21 +534,21 @@ export default function CartPage() {
                                   <button
                                     onClick={() => {
                                       const itemToEdit = cartStore.cart.find(
-                                        cartItem =>
+                                        (cartItem) =>
                                           cartItem.productCartId ===
-                                          item.productCartId,
-                                      )
+                                          item.productCartId
+                                      );
 
                                       if (!itemToEdit) {
-                                        return
+                                        return;
                                       }
 
                                       cartStore.cart = cartStore.cart.filter(
-                                        cartItem =>
+                                        (cartItem) =>
                                           cartItem.productCartId !==
-                                          item.productCartId,
-                                      )
-                                      setEditMode(null)
+                                          item.productCartId
+                                      );
+                                      setEditMode(null);
                                     }}
                                     className="w-fit rounded-xl bg-[#e8453e] px-4 py-2 text-sm font-medium text-white"
                                   >
@@ -561,17 +561,17 @@ export default function CartPage() {
                                   <button
                                     onClick={() => {
                                       const itemToEdit = cartStore.cart.find(
-                                        cartItem =>
+                                        (cartItem) =>
                                           cartItem.productCartId ===
-                                          item.productCartId,
-                                      )
+                                          item.productCartId
+                                      );
 
                                       if (!itemToEdit) {
-                                        return
+                                        return;
                                       }
 
-                                      itemToEdit.quantity = editMode.quantity
-                                      setEditMode(null)
+                                      itemToEdit.quantity = editMode.quantity;
+                                      setEditMode(null);
                                     }}
                                     className="w-fit rounded-xl bg-[#28a745] px-4 py-2 text-sm font-medium text-white"
                                   >
@@ -580,7 +580,7 @@ export default function CartPage() {
                                 ) : null}
                                 <button
                                   onClick={() => {
-                                    setEditMode(null)
+                                    setEditMode(null);
                                   }}
                                   className="w-fit rounded-xl bg-gray-100 px-4 py-2 text-sm font-medium text-gray-500"
                                 >
@@ -589,7 +589,7 @@ export default function CartPage() {
                               </div>
                             ) : null}
                           </div>
-                        )
+                        );
                       })}
                     </div>
                   ) : (
@@ -600,7 +600,7 @@ export default function CartPage() {
 
                   <button
                     onClick={() => {
-                      setIsOpen(false)
+                      setIsOpen(false);
                     }}
                     className="mt-4 text-center text-orange-600"
                   >
@@ -630,19 +630,19 @@ export default function CartPage() {
                                 item.customizationItems.reduce(
                                   (acc, item) =>
                                     acc + item.price * item.quantity,
-                                  0,
+                                  0
                                 )) *
                                 item.quantity
-                            )
+                            );
                           }, 0) / 100
-                        ).toLocaleString('pt-BR', {
-                          style: 'currency',
-                          currency: 'BRL',
+                        ).toLocaleString("pt-BR", {
+                          style: "currency",
+                          currency: "BRL",
                         })}
                       </p>
                     </div>
                   </div>
-                  {deliveryType === 'delivery' ? (
+                  {deliveryType === "delivery" ? (
                     <div className="flex flex-col gap-2">
                       <div className="flex justify-between">
                         <p>Entrega</p>
@@ -654,7 +654,7 @@ export default function CartPage() {
                   <div className="mt-2 flex justify-between">
                     <p className="font-semibold">Total</p>
                     <p className="font-semibold">
-                      {deliveryType === 'delivery' ? 'Entrega + ' : null}
+                      {deliveryType === "delivery" ? "Entrega + " : null}
 
                       {(
                         cartStore.cart.reduce((acc, item) => {
@@ -663,14 +663,14 @@ export default function CartPage() {
                             (item.price +
                               item.customizationItems.reduce(
                                 (acc, item) => acc + item.price * item.quantity,
-                                0,
+                                0
                               )) *
                               item.quantity
-                          )
+                          );
                         }, 0) / 100
-                      ).toLocaleString('pt-BR', {
-                        style: 'currency',
-                        currency: 'BRL',
+                      ).toLocaleString("pt-BR", {
+                        style: "currency",
+                        currency: "BRL",
                       })}
                     </p>
                   </div>
@@ -682,31 +682,31 @@ export default function CartPage() {
                 href={whatsappLink}
                 target="_blank"
                 rel="noreferrer"
-                onClick={e => {
+                onClick={(e) => {
                   // Prevent navigation if the link is disabled
                   if (isDisabled) {
-                    e.preventDefault()
+                    e.preventDefault();
                   }
 
                   if (customerName.length === 0) {
-                    e.preventDefault()
-                    toast.error('Por favor, preencha seu nome.')
-                    return
+                    e.preventDefault();
+                    toast.error("Por favor, preencha seu nome.");
+                    return;
                   }
 
                   if (
-                    deliveryType === 'delivery' &&
+                    deliveryType === "delivery" &&
                     customerAddress.length === 0
                   ) {
-                    e.preventDefault()
-                    toast.error('Por favor, preencha seu endereço.')
-                    return
+                    e.preventDefault();
+                    toast.error("Por favor, preencha seu endereço.");
+                    return;
                   }
                 }}
                 className={`inline-block w-full rounded-lg px-6 py-2 text-center text-white  ${
                   isDisabled
-                    ? 'pointer-events-none bg-gray-400' // Disables link interaction
-                    : 'bg-[#28a745]'
+                    ? "pointer-events-none bg-gray-400" // Disables link interaction
+                    : "bg-[#28a745]"
                 }`}
               >
                 Continuar
@@ -716,88 +716,90 @@ export default function CartPage() {
         </SheetContent>
       </Sheet>
     </>
-  )
+  );
 }
 
 const indexToDay = (index: number): string => {
   const days = [
-    'Domingo',
-    'Segunda',
-    'Terça',
-    'Quarta',
-    'Quinta',
-    'Sexta',
-    'Sábado',
-  ]
-  return days[index]
-}
+    "Domingo",
+    "Segunda",
+    "Terça",
+    "Quarta",
+    "Quinta",
+    "Sexta",
+    "Sábado",
+  ];
+  return days[index];
+};
 
 const selectedUnitIsOpen = (
   selectedUnitBusinessHours:
     | {
-        id: number
-        day: string
-        open: string
-        close: string
-        unitId: number
+        id: number;
+        day: string;
+        open: string;
+        close: string;
+        unitId: number;
       }[]
-    | undefined,
+    | undefined
 ): boolean => {
-  if (!selectedUnitBusinessHours) return false
+  if (!selectedUnitBusinessHours) return false;
 
-  const now = new Date()
-  const currentDayIndex = getDay(now)
-  const currentDayPortuguese = indexToDay(currentDayIndex)
-  const currentTimeString = format(now, 'HH:mm')
+  const now = new Date();
+  const currentDayIndex = getDay(now);
+  const currentDayPortuguese = indexToDay(currentDayIndex);
+  const currentTimeString = format(now, "HH:mm");
 
   const todayBusinessHours = selectedUnitBusinessHours.find(
-    bh => bh.day === currentDayPortuguese,
-  )
+    (bh) => bh.day === currentDayPortuguese
+  );
 
-  if (!todayBusinessHours || todayBusinessHours.open === 'closed') {
-    return false
+  if (!todayBusinessHours || todayBusinessHours.open === "closed") {
+    return false;
   }
 
   // Parse the current, open, and close times as dates on the same day
-  const currentDate = parse(currentTimeString, 'HH:mm', new Date())
-  const openDate = parse(todayBusinessHours.open, 'HH:mm', new Date())
-  const closeDate = parse(todayBusinessHours.close, 'HH:mm', new Date())
+  const currentDate = parse(currentTimeString, "HH:mm", new Date());
+  const openDate = parse(todayBusinessHours.open, "HH:mm", new Date());
+  const closeDate = parse(todayBusinessHours.close, "HH:mm", new Date());
 
   // Compare the times
-  return currentDate >= openDate && currentDate <= closeDate
-}
+  return currentDate >= openDate && currentDate <= closeDate;
+};
 
 interface OrderDetails {
-  customerName: string
-  items: { name: string; quantity: number; price: string }[]
-  total: string
-  phoneNumber: string
-  typeOfDelivery: 'delivery' | 'pickup'
-  address?: string
+  customerName: string;
+  items: { name: string; quantity: number; price: string }[];
+  total: string;
+  phoneNumber: string;
+  typeOfDelivery: "delivery" | "pickup";
+  address?: string;
 }
 
 const generateWhatsAppLink = (orderDetails: OrderDetails): string => {
   // Base URL for sending WhatsApp messages
-  const baseURL = 'https://wa.me/'
+  const baseURL = "https://wa.me/";
 
   // Construct the message
   let message = `
-  Oi, aqui estão os detalhes do meu pedido:\n\nItens:\n`
+  Oi, aqui estão os detalhes do meu pedido:\n\nItens:\n`;
   orderDetails.items.forEach((item, index) => {
-    message += `${index + 1}. ${item.name}\n`
-    message += `Quantidade: ${item.quantity}, Preço: ${item.price}\n`
-  })
-  message += `--------------------------------\n\n`
-  message += `Nome: ${orderDetails.customerName}\n`
-  message += `Tipo de entrega: ${orderDetails.typeOfDelivery === 'delivery' ? 'Entrega' : 'Retirada'}\n`
-  if (orderDetails.typeOfDelivery === 'delivery') {
-    message += `Endereço: ${orderDetails.address}\n\n`
+    message += `${index + 1}. ${item.name}\n`;
+    message += `Quantidade: ${item.quantity}, Preço: ${item.price}\n`;
+  });
+  message += `--------------------------------\n\n`;
+  message += `Nome: ${orderDetails.customerName}\n`;
+  message += `Tipo de entrega: ${
+    orderDetails.typeOfDelivery === "delivery" ? "Entrega" : "Retirada"
+  }\n`;
+  if (orderDetails.typeOfDelivery === "delivery") {
+    message += `Endereço: ${orderDetails.address}\n\n`;
   }
-  message += `Total: ${orderDetails.total}`
+  message += `Total: ${orderDetails.total}`;
 
   // Encode the message to be URL-safe
-  const encodedMessage = encodeURIComponent(message)
+  const encodedMessage = encodeURIComponent(message);
 
   // Return the complete URL
-  return `${baseURL}${orderDetails.phoneNumber}?text=${encodedMessage}`
-}
+  return `${baseURL}${orderDetails.phoneNumber}?text=${encodedMessage}`;
+};

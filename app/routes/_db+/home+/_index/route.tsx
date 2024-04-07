@@ -10,7 +10,7 @@ export const meta: MetaFunction = () => {
     {
       name: "description",
       content:
-        "Seja bem vindo a Zencart! Nessa parte do site você pode gerenciar seu catálogo digital.",
+        "Welcome to Zencart! In this part of the site, you can manage your digital catalog.",
     },
   ];
 };
@@ -20,46 +20,46 @@ export default function Screen() {
     <div className="flex flex-col">
       <div className="mb-12 flex flex-col items-center justify-between sm:flex-row">
         <h1 className="flex items-center text-lg font-semibold text-gray-600">
-          Olá, seja bem-vindo!
+          Hey, welcome!
         </h1>
       </div>
       <div>
         <h2 className="font-medium text-gray-600">
-          Primeiros passos para você começar a usar seu Zencart:
+          First steps to start using your Zencart:
         </h2>
         <div className="mt-6 flex flex-col gap-y-3 text-gray-600">
-          <p>1. Acesse o menu lateral e clique na aba empresas</p>
+          <p>1. Access the side menu and click on the companies tab.</p>
           <p>
-            2. Configure os dados da sua empresa e cadastre uma Unidade (É aqui
-            onde você adiciona o número do seu WhatsApp).
+            2. Set up your company details and register a Unit (This is where
+            you add your WhatsApp number).
           </p>
           <p>
-            3. Após a sua empresa estar configurada, chegou a hora de criar seus
-            produtos!
+            3. Once your company is set up, it&#39;s time to create your
+            products!
           </p>
           <p>
-            4. Acesse o menu lateral e clique na aba produtos, lá você pode
-            adicionar, editar e excluir seus produtos.
+            4. Access the side menu and click on the products tab, there you can
+            add, edit, and delete your products.
           </p>
           <p>
-            5. Após finalizar a criação dos seus produtos, acesse a aba
-            categorias e adicione categorias para os seus produtos (as
-            categorias que você cria aqui vão aparecer no seu catálogo digital).
+            5. After finishing creating your products, go to the categories tab
+            and add categories for your products (the categories you create here
+            will appear in your digital catalog).
           </p>
           <p>
-            6. Pronto! Agora você já pode compartilhar o link do seu catálogo
-            digital com seus clientes.
+            6. Done! Now you can share the link of your digital catalog with
+            your customers.
           </p>
         </div>
         <div className="mt-6 flex flex-col gap-y-3 text-gray-600">
-          <h2 className="font-medium text-gray-600">Tutoriais em vídeo</h2>
+          <h2 className="font-medium text-gray-600">Video tutorials</h2>
           <a
             target="_blank"
             rel="noreferrer noopener"
             className="text-orange-600 underline"
             href="https://www.loom.com/share/27654949e0dc48cb8efe7b49402cca97?sid=d4778278-ed83-4913-a323-5701195aa4ec"
           >
-            Criando um produto e uma categoria
+            Creating a product and a category
           </a>
         </div>
       </div>
