@@ -1,9 +1,9 @@
-'use client'
+"use client";
 
-import * as React from 'react'
-import { useFetcher } from '@remix-run/react'
-import { useMediaQuery } from '@uidotdev/usehooks'
-import { Button2 } from '~/components/ui/button2'
+import * as React from "react";
+import { useFetcher } from "@remix-run/react";
+import { useMediaQuery } from "@uidotdev/usehooks";
+import { Button2 } from "~/components/ui/button2";
 import {
   Dialog,
   DialogContent,
@@ -11,7 +11,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '~/components/ui/dialog'
+} from "~/components/ui/dialog";
 import {
   Drawer,
   DrawerContent,
@@ -19,26 +19,26 @@ import {
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
-} from '~/components/ui/drawer'
-import { Input } from '~/components/ui/input'
-import { Label } from '~/components/ui/label'
-import { cn } from '~/utils'
-import type { loader } from '../$productId'
+} from "~/components/ui/drawer";
+import { Input } from "~/components/ui/input";
+import { Label } from "~/components/ui/label";
+import { cn } from "~/utils";
+import type { loader } from "../$productId";
 
 export function DDCreateItemCustomizationCategory() {
-  const [open, setOpen] = React.useState(false)
-  const isDesktop = useMediaQuery('only screen and (min-width : 768px)')
+  const [open, setOpen] = React.useState(false);
+  const isDesktop = useMediaQuery("only screen and (min-width : 768px)");
   const fetcher = useFetcher<typeof loader>({
-    key: 'createCustomizationCategory',
-  })
+    key: "createCustomizationCategory",
+  });
   const isPending =
-    fetcher.state === 'submitting' || fetcher.state === 'loading'
+    fetcher.state === "submitting" || fetcher.state === "loading";
 
   React.useEffect(() => {
     if (isPending === false && fetcher.data?.ok) {
-      setOpen(false)
+      setOpen(false);
     }
-  }, [fetcher.data, isPending])
+  }, [fetcher.data, isPending]);
 
   if (isDesktop) {
     return (
@@ -56,7 +56,7 @@ export function DDCreateItemCustomizationCategory() {
           <CreateCustomizationCategoryForm />
         </DialogContent>
       </Dialog>
-    )
+    );
   }
 
   return (
@@ -74,21 +74,23 @@ export function DDCreateItemCustomizationCategory() {
         <CreateCustomizationCategoryForm className="px-4 pb-12" />
       </DrawerContent>
     </Drawer>
-  )
+  );
 }
 
 function CreateCustomizationCategoryForm({
   className,
-}: React.ComponentProps<'div'>) {
-  const fetcher = useFetcher({ key: 'createCustomizationCategory' })
+}: {
+  className?: React.ComponentProps<"div">["className"];
+}) {
+  const fetcher = useFetcher({ key: "createCustomizationCategory" });
   const isPending =
-    fetcher.state === 'submitting' || fetcher.state === 'loading'
+    fetcher.state === "submitting" || fetcher.state === "loading";
 
   return (
     <fetcher.Form
       method="post"
       action="?/createCustomizationCategory"
-      className={cn('grid items-start gap-2', className)}
+      className={cn("grid items-start gap-2", className)}
     >
       <div className="flex flex-col gap-y-2">
         <Label htmlFor="customizationName" className="text-left">
@@ -127,11 +129,11 @@ function CreateCustomizationCategoryForm({
       </div>
       <Button2
         className={`mt-4`}
-        status={isPending ? 'pending' : 'idle'}
+        status={isPending ? "pending" : "idle"}
         type="submit"
       >
         Salvar
       </Button2>
     </fetcher.Form>
-  )
+  );
 }

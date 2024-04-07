@@ -43,9 +43,9 @@ export function DDDeleteCustomizationCategory({
         </DialogTrigger>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
-            <DialogTitle>Deletar categoria de customização</DialogTitle>
+            <DialogTitle>Delete customization category</DialogTitle>
             <DialogDescription>
-              Tem certeza que deseja deletar essa categoria de customização?
+              Are you sure you want to delete this customization category?
             </DialogDescription>
           </DialogHeader>
           <DeleteForm customizationCategoryId={customizationCategoryId} />
@@ -63,9 +63,9 @@ export function DDDeleteCustomizationCategory({
       </DrawerTrigger>
       <DrawerContent>
         <DrawerHeader className="text-left">
-          <DrawerTitle>Deletar categoria de customização</DrawerTitle>
+          <DrawerTitle>Delete customization category</DrawerTitle>
           <DrawerDescription>
-            Tem certeza que deseja deletar essa categoria de customização?
+            Are you sure you want to delete this customization category?
           </DrawerDescription>
         </DrawerHeader>
         <DeleteForm
@@ -100,12 +100,12 @@ function DeleteForm({
 
         <DrawerClose asChild>
           <Button variant="link" className="w-fit">
-            Cancelar
+            Cancel
           </Button>
         </DrawerClose>
 
         <Button2 type="submit" color="red" className="w-fit">
-          Deletar
+          Delete
         </Button2>
       </div>
     </Form>

@@ -26,15 +26,15 @@ export type CustomizationCategory = {
 export const columns: ColumnDef<CustomizationCategory>[] = [
   {
     accessorKey: "name",
-    header: "Nome",
+    header: "Name",
   },
   {
     accessorKey: "min",
-    header: "Mínimo",
+    header: "Minimum",
   },
   {
     accessorKey: "max",
-    header: "Máximo",
+    header: "Maximum",
   },
   {
     id: "actions",
