@@ -20,15 +20,15 @@ import { createServices } from "~/modules/auth/services.server";
 
 export const meta: MetaFunction = () => {
   return [
-    { title: "Zencart - Catálogo digital descomplicado" },
+    { title: "Zencart | WhatsApp Your Way to More Sales" },
     {
       property: "og:title",
-      content: "Zencart - Catálogo digital descomplicado",
+      content: "Zencart | WhatsApp Your Way to More Sales",
     },
     {
       name: "description",
       content:
-        "Facilite a vida do seu cliente e aumente em até 3 vezes as suas vendas. Com a Zencart você cria uma catálogo digital para sua loja em poucos minutos.",
+        "Make shopping a breeze for your customers and boost your sales. Create a digital catalog for your store with Zencart in just a few minutes.",
     },
   ];
 };

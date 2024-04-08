@@ -17,14 +17,14 @@ import { createServices } from "~/modules/auth/services.server";
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
   return [
-    { title: `${data?.data?.title} | Catálogo Digital` },
+    { title: `${data?.data?.title} | Digital Catalog` },
     {
       property: "og:title",
-      content: `${data?.data?.title} | Catálogo Digital`,
+      content: `${data?.data?.title} | Digital Catalog`,
     },
     {
       name: "description",
-      content: "Acesse o nosso catálogo digital.",
+      content: "Access our digital catalog.",
     },
   ];
 };

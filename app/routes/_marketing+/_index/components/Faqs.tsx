@@ -43,7 +43,7 @@ export function Faqs() {
     <section
       id="faq"
       aria-labelledby="faq-title"
-      className="relative overflow-hidden bg-gray-50 py-20 sm:pb-24 sm:pt-24"
+      className="relative overflow-hidden bg-gray-50 pb-10 sm:pb-24 sm:pt-24"
     >
       {/* <img
         className="absolute left-1/2 top-0 max-w-none -trangray-y-1/4 trangray-x-[-30%]"

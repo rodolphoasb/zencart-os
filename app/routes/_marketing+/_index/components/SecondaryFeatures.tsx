@@ -146,7 +146,7 @@ function FeaturesMobile() {
       {features.map((feature) => (
         <div key={feature.summary}>
           <Feature feature={feature} className="mx-auto max-w-2xl" isActive />
-          <div className="relative mt-10 pb-10">
+          <div className="relative mt-10">
             <div className="absolute -inset-x-4 bottom-0 top-8 hidden bg-slate-200 sm:-inset-x-6 sm:flex" />
             {feature.name === "Digital Catalog" ? (
               <>
@@ -162,16 +162,19 @@ function FeaturesMobile() {
                   id="video"
                   className="mt-14 flex w-full justify-center sm:mt-24 sm:hidden"
                 >
-                  <div className="w-full overflow-hidden rounded-lg sm:w-10/12 ">
-                    <video
-                      controls={false}
-                      loop={true}
-                      src={"https://zenvios.io/zencart-demo.mp4"}
-                      muted
-                      playsInline
-                      autoPlay
-                      preload="none"
-                    />
+                  <div className="flex h-full w-full overflow-hidden">
+                    <div className="w-full bg-[url('/src/images/Device.png')] back overflow-hidden flex items-center bg-cover justify-center p-[42px] pb-0 pt-[21%]">
+                      <video
+                        controls={false}
+                        loop={true}
+                        src={"https://zenvios.io/zencart-demo.mp4"}
+                        muted
+                        playsInline
+                        autoPlay
+                        preload="none"
+                        className="rounded-t-2xl"
+                      />
+                    </div>
                   </div>
                 </div>
               </>
