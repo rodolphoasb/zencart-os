@@ -44,11 +44,10 @@ function Plan({
       )}
     >
       <div className="flex w-full flex-col items-center justify-center">
-        <p className="font-semibold">Apenas 12x de</p>
+        <p className="font-normal mb-2">Only</p>
         <p className="text-5xl font-bold tracking-tight text-orange-500">
           {price}
         </p>
-        <p className="text-sm">ou R$ 597 à vista no Pix</p>
       </div>
       <h3 className="mt-5 text-lg font-medium text-black">{name}</h3>
       <p
@@ -65,7 +64,7 @@ function Plan({
           <div className="flex w-full items-center justify-center gap-x-4 rounded-full bg-white p-4">
             <AlarmClockIcon className="h-5 w-5 text-orange-500" />
             <p className="text-center text-xs font-medium sm:text-sm">
-              Desconto exclusivo para as 100 primeiras compras.
+              Exclusive discount for the first 100 purchases.
             </p>
           </div>
         </div>
@@ -99,15 +98,15 @@ function Plan({
       <Button2
         href={href}
         color="orange"
-        className="mt-8"
-        aria-label={`Começar agora com o plano vitalício por R$ 597.`}
+        className="mt-8 text-xl"
+        aria-label={`Start`}
         rel="noopener noreferrer"
         target="_blank"
         onClick={() => {
           posthog.capture("clicked_buy_now");
         }}
       >
-        Começar agora
+        Start
       </Button2>
     </section>
   );
@@ -130,7 +129,7 @@ export function Pricing() {
           <Plan
             featured
             name="Lifetime Plan"
-            price="$12"
+            price="$149"
             description="No fees, commissions, or monthly charges."
             href="https://pay.kiwify.com.br/ybcO2sO"
             features={[

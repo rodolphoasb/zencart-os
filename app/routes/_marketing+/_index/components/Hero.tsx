@@ -1,6 +1,4 @@
-import { ClientOnly } from "remix-utils/client-only";
 import { Container } from "./Container";
-import { DrawerDialogWatchVideo } from "./DrawerDialogWatchVideo";
 
 export function Hero() {
   return (
@@ -12,10 +10,6 @@ export function Hero() {
         Get orders fast on WhatsApp: Show your catalog, connect with customers,
         and sell with a tap.
       </p>
-
-      <div className="mt-10 flex justify-center gap-x-6">
-        <ClientOnly>{() => <DrawerDialogWatchVideo />}</ClientOnly>
-      </div>
     </Container>
   );
 }
