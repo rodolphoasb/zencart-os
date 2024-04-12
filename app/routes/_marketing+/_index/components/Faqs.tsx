@@ -20,7 +20,7 @@ const faqs = [
   {
     question: "Is there a limit to the number of products I can add?",
     answer:
-      "No, you can add as many products as you want. The only limitation is on photos. Each store can have a maximum of 1000 photos. To purchase an additional 1000 photo package (R$ 99.00 - one-time fee), please contact us.",
+      "No, you can add as many products as you want. The only limitation is on photos. Each store can have a maximum of 1000 photos. To purchase an additional 1000 photo package ($ 19.90 - one-time fee), please contact us.",
   },
   {
     question: "Is there a loyalty contract? Any hidden fees?",
