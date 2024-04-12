@@ -3,6 +3,7 @@ import { AlarmClockIcon } from "lucide-react";
 import posthog from "posthog-js";
 import { Button2 } from "~/components/ui/button2";
 import { Container } from "./Container";
+import { cn } from "~/utils";
 
 // function SwirlyDoodle(props: React.ComponentPropsWithoutRef<"svg">) {
 //   return (
@@ -27,53 +28,70 @@ function Plan({
   description,
   href,
   features,
+  pretext,
   featured = false,
+  exclusiveDiscount = false,
 }: {
-  name: string;
+  name?: string;
   price: string;
   description: string;
   href: string;
   features: Array<string>;
   featured?: boolean;
+  pretext: string;
+  exclusiveDiscount?: boolean;
 }) {
   return (
     <section
       className={clsx(
-        "flex flex-col rounded-3xl px-6 shadow-xl sm:px-8",
-        featured ? " bg-white py-8" : "lg:py-8"
+        "flex flex-col rounded-3xl px-6 border py-8  sm:px-8",
+        featured ? " bg-white shadow-lg" : "shadow"
       )}
     >
       <div className="flex w-full flex-col items-center justify-center">
-        <p className="font-normal mb-2">Only</p>
-        <p className="text-5xl font-bold tracking-tight text-orange-500">
+        <p className="font-normal mb-2">{pretext}</p>
+        <p
+          className={cn(
+            featured && "text-5xl font-bold tracking-tight text-orange-500",
+            !featured &&
+              "text-4xl font-semibold tracking-tight text-neutral-900"
+          )}
+        >
           {price}
         </p>
       </div>
-      <h3 className="mt-5 text-lg font-medium text-black">{name}</h3>
-      <p
-        className={clsx(
-          "mt-2 text-base",
-          featured ? "text-black" : "text-slate-400"
-        )}
-      >
-        {description}
-      </p>
+      {name ? (
+        <h3 className="mt-5 text-lg font-medium text-black">{name}</h3>
+      ) : null}
 
-      <div className="mt-6 flex w-full justify-center">
-        <div className="w-full rounded-full bg-gradient-to-r from-pink-500 via-red-500 to-orange-500 p-[1.5px]">
-          <div className="flex w-full items-center justify-center gap-x-4 rounded-full bg-white p-4">
-            <AlarmClockIcon className="h-5 w-5 text-orange-500" />
-            <p className="text-center text-xs font-medium sm:text-sm">
-              Exclusive discount for the first 100 purchases.
-            </p>
+      {description ? (
+        <p
+          className={clsx(
+            "mt-2 text-base",
+            featured ? "text-black" : "text-neutral-600"
+          )}
+        >
+          {description}
+        </p>
+      ) : null}
+
+      {exclusiveDiscount ? (
+        <div className="mt-6 flex w-full justify-center">
+          <div className="w-full rounded-full bg-gradient-to-r from-pink-500 via-red-500 to-orange-500 p-[1.5px]">
+            <div className="flex w-full items-center justify-center gap-x-4 rounded-full bg-white p-4">
+              <AlarmClockIcon className="h-5 w-5 text-orange-500" />
+              <p className="text-center text-xs font-medium sm:text-sm">
+                Exclusive discount for the first 100 purchases.
+              </p>
+            </div>
           </div>
         </div>
-      </div>
+      ) : null}
 
       <ul
         className={clsx(
           "order-last mt-10 flex flex-col gap-y-3 text-sm",
-          featured ? "text-black" : "text-slate-200"
+          featured ? "text-black" : "text-neutral-600"
         )}
       >
         {features.map((feature) => (
@@ -83,7 +101,7 @@ function Plan({
               viewBox="0 0 20 20"
               fill="currentColor"
               aria-hidden="true"
-              className="h-5 w-5 text-green-400"
+              className="h-5 w-5 shrink-0 text-[#00D632]"
             >
               <path
                 fillRule="evenodd"
@@ -97,11 +115,9 @@ function Plan({
       </ul>
       <Button2
         href={href}
-        color="orange"
+        color={featured ? "orange" : "white"}
         className="mt-8 text-xl"
         aria-label={`Start`}
-        rel="noopener noreferrer"
-        target="_blank"
         onClick={() => {
           posthog.capture("clicked_buy_now");
         }}
@@ -121,17 +137,34 @@ export function Pricing() {
     >
       <Container>
         <div className="md:text-center">
-          <h2 className="font-semibold text-3xl tracking-tight text-slate-900 sm:text-4xl md:text-5xl">
+          <h2 className="font-semibold text-3xl tracking-tight text-neutral-900 sm:text-4xl md:text-5xl">
             The simplest pricing on the market.
           </h2>
         </div>
-        <div className="mt-16 flex w-full justify-center">
+        <div className="mt-16 flex flex-col gap-y-8 sm:gap-y-0 sm:flex-row gap-x-8 w-full justify-center">
+          <Plan
+            price="Free"
+            description="No fees, commissions, or monthly charges."
+            pretext="Get Started for"
+            href="/login"
+            features={[
+              "Upload up to 25 images",
+              "Unlimited orders on WhatsApp",
+              "Time-saving in customer service",
+              "Link for Instagram bio",
+              "Your catalog ready in minutes",
+              "Access via computer or mobile",
+              "New features every month",
+            ]}
+          />
           <Plan
             featured
             name="Lifetime Plan"
             price="$149"
             description="No fees, commissions, or monthly charges."
-            href="https://pay.kiwify.com.br/ybcO2sO"
+            pretext="Only"
+            href="/login"
+            exclusiveDiscount
             features={[
               "Unlimited products (Limit of 1000 photos per store)",
               "Time-saving in customer service",
