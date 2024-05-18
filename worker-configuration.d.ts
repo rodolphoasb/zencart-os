@@ -2,19 +2,20 @@
 // by running `wrangler types`
 
 interface Env {
-	KV: KVNamespace;
-	DATABASE_URL: string;
-	R2_BUCKET_NAME: string;
-	R2_API_TOKEN: string;
-	ACCESS_KEY_ID: string;
-	SECRET_ACCESS_KEY: string;
-	PUBLIC_CLOUDFLARE_ACCOUNT_ID: string;
-	PUBLIC_CLOUDFLARE_IMAGE_TOKEN: string;
-	SESSION_SECRET: string;
-	LOOPS_API_KEY: string;
-	ENVIRONMENT: string;
-	TOTP_SECRET: string;
-	STRIPE_PUBLISHABLE_KEY: string;
-	STRIPE_SECRET_KEY: string;
-	STRIPE_WEBHOOK_SECRET: string;
+  KV: KVNamespace;
+  DATABASE_URL: string;
+  R2_BUCKET_NAME: string;
+  R2_API_TOKEN: string;
+  ACCESS_KEY_ID: string;
+  SECRET_ACCESS_KEY: string;
+  PUBLIC_CLOUDFLARE_ACCOUNT_ID: string;
+  PUBLIC_CLOUDFLARE_IMAGE_TOKEN: string;
+  SESSION_SECRET: string;
+  LOOPS_API_KEY: string;
+  ENVIRONMENT: string;
+  TOTP_SECRET: string;
+  STRIPE_PUBLISHABLE_KEY: string;
+  STRIPE_SECRET_KEY: string;
+  STRIPE_WEBHOOK_SECRET: string;
+  CLOUDFLARE_UPLOAD_URL: string;
 }

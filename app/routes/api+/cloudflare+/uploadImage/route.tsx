@@ -11,7 +11,7 @@ export const action: ActionFunction = async ({ context, request }) => {
     `${context.cloudflare.env.R2_BUCKET_NAME}:${context.cloudflare.env.R2_API_TOKEN}`
   );
 
-  const uploadURL = "https://r2-image-worker.rbravo.workers.dev/upload";
+  const uploadURL = context.cloudflare.env.CLOUDFLARE_UPLOAD_URL;
 
   // Function to upload a single image
   const uploadImage = async (base64String: string) => {
