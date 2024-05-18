@@ -1,48 +1,38 @@
-# Welcome to Remix + Vite!
+# Welcome to Zencart
 
-📖 See the [Remix docs](https://remix.run/docs) and the [Remix Vite docs](https://remix.run/docs/en/main/future/vite) for details on supported features.
+Ecommerce 🤝 WhatsApp
 
-## Typegen
+Zencart allows businesses to create a digital catalog of their products and receive orders directly on WhatsApp.
 
-Generate types for your Cloudflare bindings in `wrangler.toml`:
+This is a full-stack SaaS built with:
 
-```sh
-npm run typegen
-```
+- Remix (Vite)
+- Tailwind
+- Postgres (Supabase)
+- Cloudflare Pages
+- Auth using Magic Links with Loops (https://loops.so/)
+- Prisma
 
-You will need to rerun typegen whenever you make changes to `wrangler.toml`.
+## Here's how Zencart works:
 
-## Development
+1. You create your store and add the information about it: logo, name, working hours, etc.
 
-Run the Vite dev server:
+2. Create your products
 
-```sh
-npm run dev
-```
+![Products](https://zencart.io/assets/products-B8niJzwr.png)
 
-To run Wrangler:
+You can add photos, descriptions, and tags related to a product.
 
-```sh
-npm run build
-npm run start
-```
+![Product Details](https://zencart.io/assets/product-DgIf6cgk.png)
 
-## Deployment
+3. Create categories for your products
 
-> [!WARNING]  
-> Cloudflare does _not_ use `wrangler.toml` to configure deployment bindings.
-> You **MUST** [configure deployment bindings manually in the Cloudflare dashboard][bindings].
+![Categories](https://zencart.io/assets/categories-B27KT5KE.png)
 
-First, build your app for production:
+4. Get your store's link and send it to your customer:
 
-```sh
-npm run build
-```
+![Store Link](https://zencart.io/assets/store-Luhfv_-u.png)
 
-Then, deploy your app to Cloudflare Pages:
+5. When they have finished their order, you'll receive it directly on your WhatsApp
 
-```sh
-npm run deploy
-```
-
-[bindings]: https://developers.cloudflare.com/pages/functions/bindings/
+![Orders](https://zencart.io/assets/orders-CXDtDfco.png)

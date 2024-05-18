@@ -94,6 +94,7 @@ export function createAuth({
               "Content-Type": "application/json",
             },
             body: JSON.stringify({
+              // Replace this with your own transactionalId - you can find this id in the Loops Dashboard
               transactionalId: "cluls4u3201h3fco57tnz79bb",
               email: email,
               dataVariables: {
